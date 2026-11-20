@@ -750,6 +750,69 @@
     .infobar .clockbox{align-items:flex-start}
   }
 
+  /* ===== 휴대폰(좁은 화면) ===== */
+  @media (max-width:600px){
+    .topbar{padding:8px 12px 2px; gap:6px 10px}
+    .mascot{width:46px; height:46px}
+    .greet{font-size:16.5px; white-space:normal}
+    .brand-text{max-width:none}
+    .nav{flex-wrap:wrap; gap:6px}
+    .kidtabs,.sectabs{flex-wrap:wrap; justify-content:center; gap:6px}
+    .pill{min-height:42px; padding:0 11px; font-size:14.5px; gap:5px}
+    .pill .p-sub{display:none}
+    .pill .p-n{font-size:11.5px; padding:1px 6px}
+    .tools{gap:6px}
+    .mini{min-height:38px; padding:0 9px; font-size:12.5px}
+    .gear{width:44px; height:44px; font-size:21px}
+    .hero{grid-template-columns:1fr; gap:8px; padding:9px 12px; margin:4px 12px 0}
+    .hero-text{font-size:25px; letter-spacing:-.8px; white-space:normal; line-height:1.18}
+    .hero-ico{font-size:20px}
+    .hero-side{flex-direction:row; align-items:center; justify-content:space-between; gap:8px; width:100%}
+    .hero-badges{justify-content:flex-start}
+    .praise-btn{min-height:38px; font-size:13.5px; padding:0 12px}
+    .infobar{grid-template-columns:1fr; grid-template-areas:"clock" "sw" "weather"; padding:8px 12px 0; gap:8px}
+    .infobar .clockbox{flex-direction:row; align-items:baseline; gap:10px; padding:8px 12px}
+    .infobar .clock{font-size:28px}
+    .infobar .clock-sub{font-size:13px; white-space:nowrap}
+    .stopwatch{width:auto; justify-content:space-between}
+    .stopwatch .sw-time{font-size:22px; min-width:0}
+    .affirm{margin:6px 12px 0; font-size:15px}
+    .kids{padding:6px 12px 12px}
+    .kid{padding:8px 8px 10px}
+    .kid-head .kid-name{font-size:22px}
+    .head-note{font-size:12px}
+    .head-right{width:100%; margin-left:0; justify-content:space-between}
+    .igrid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:7px}
+    .icard-label{font-size:12.5px; padding-top:4px; letter-spacing:-.2px}
+    .icard-sub{font-size:10px}
+    .icard-num{min-width:20px; height:20px; font-size:11px}
+    .hgrid{grid-template-columns:1fr}
+    .hcard img{width:44px; height:44px}
+    .hcard .h-label{font-size:14.5px}
+    .hero-labels{font-size:11px}
+  }
+
+  @media (max-width:600px){
+    .nav{display:block; width:100%}
+    .kidtabs{justify-content:center; margin-bottom:6px}
+    .sectabs{justify-content:center; flex-wrap:wrap}
+    .sectabs .pill{font-size:13.5px; padding:0 9px; min-height:40px}
+    .sectabs .pill .p-n{font-size:11px; padding:1px 5px}
+    .hero-text{font-size:22px}
+  }
+
+  @media (max-width:600px){
+    body[data-layout="tab"] .hero-text{font-size:23px}
+    body[data-layout="tab"] .igrid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+    body[data-layout="tab"] .icard{padding:4px 4px 6px}
+    body[data-layout="tab"] .icard-label{font-size:12px; padding-top:4px}
+    body[data-layout="tab"] .icard-sub{font-size:9.5px}
+    body[data-layout="tab"] .kid-name{font-size:22px}
+    body[data-layout="tab"] .head-right .stamp-slot{width:21px; height:21px}
+    body[data-layout="tab"] .head-right .stamp-slot .stamp{width:19px; height:19px}
+    body[data-layout="tab"] .head-right .stampboard{gap:3px; padding:2px 4px}
+  }
+
 </style>
 </head>
 <body data-theme="pokemon" data-layout="side">
