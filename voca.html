@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFD84D">
+<title>단영의 능률보카 · 초등 기본</title>
+<style>
+:root{
+  --y:#FFD84D; --y2:#FFF0B8; --cream:#FFFDF7; --ink:#3E3527; --ink2:#7A6C55;
+  --mint:#BCEBD6; --coral:#FFC4B2; --sky:#C7E9FA; --lilac:#DDD1F8; --pink:#FFD9E6;
+  --good:#3FA97A; --bad:#E9695F; --line:#EFE4C8;
+  --shadow:0 6px 0 rgba(0,0,0,.06), 0 2px 10px rgba(120,100,60,.10);
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Helvetica Neue",Helvetica,Arial,"Noto Sans KR","DejaVu Sans","Malgun Gothic",system-ui,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #FFF6CE 0%, rgba(255,246,206,0) 60%),
+    radial-gradient(900px 500px at 100% 0%, #E4F6FF 0%, rgba(228,246,255,0) 55%),
+    #FFFCF2;
+  min-height:100vh;
+  -webkit-text-size-adjust:100%;
+  overscroll-behavior-y:none;
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+input{font-family:inherit}
+#app{max-width:1180px;margin:0 auto;padding:0 16px 96px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 4px 10px;position:sticky;top:0;z-index:20;background:linear-gradient(#FFFCF2 70%,rgba(255,252,242,0));}
+.topbar .tb-btn{width:52px;height:52px;border-radius:18px;background:#fff;box-shadow:var(--shadow);font-size:24px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.topbar .tb-btn:active{transform:translateY(2px)}
+.titlewrap{flex:1;min-width:0}
+.titlewrap h1{margin:0;font-size:21px;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titlewrap p{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+
+/* screens */
+.screen{display:none;animation:fade .22s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* cards & panels */
+.panel{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.panel+.panel{margin-top:14px}
+.h-sec{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 12px}
+.h-sec h2{margin:0;font-size:17px}
+.h-sec .muted{font-size:13px;color:var(--ink2)}
+
+/* summary */
+.summary{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+@media(max-width:720px){.summary{grid-template-columns:1fr}}
+.big-num{font-size:34px;font-weight:800;letter-spacing:-1px}
+.big-num small{font-size:15px;font-weight:600;color:var(--ink2)}
+.bar{height:14px;border-radius:10px;background:#F4EDD9;overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,#FFD84D,#FFB74D);transition:width .4s ease}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--y2);color:#7A5B00;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:18px;padding:15px 20px;font-size:17px;font-weight:800;background:#fff;box-shadow:var(--shadow);min-height:58px;transition:transform .08s}
+.btn:active{transform:translateY(2px)}
+.btn.primary{background:linear-gradient(180deg,#FFE066,#FFCE3A);box-shadow:0 5px 0 #E8B72C,0 8px 18px rgba(220,170,20,.25)}
+.btn.mint{background:var(--mint);box-shadow:0 5px 0 #96CFB7}
+.btn.sky{background:var(--sky);box-shadow:0 5px 0 #9DCDE4}
+.btn.lilac{background:var(--lilac);box-shadow:0 5px 0 #B8A6E6}
+.btn.coral{background:var(--coral);box-shadow:0 5px 0 #E5A08C}
+.btn.ghost{box-shadow:none;background:#F7F1E1}
+.btn:disabled{opacity:.45}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* day grid */
+.daygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px}
+.daycard{position:relative;text-align:left;background:#fff;border-radius:20px;padding:14px 14px 12px;box-shadow:var(--shadow);border:3px solid transparent;transition:transform .08s}
+.daycard:active{transform:translateY(2px)}
+.daycard.review{background:linear-gradient(180deg,#F3F8FF,#EAF3FF)}
+.daycard.done{border-color:#FFE066}
+.daycard .dn{font-size:19px;font-weight:900;letter-spacing:-.5px}
+.daycard .dm{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.35}
+.daycard .stars{font-size:15px;letter-spacing:2px;margin-top:8px;color:#E3D6B5}
+.daycard .stars b{color:#FFB300;font-weight:400}
+.daycard .mini-bar{height:8px;border-radius:6px;background:#F4EDD9;margin-top:9px;overflow:hidden}
+.daycard .mini-bar>i{display:block;height:100%;background:linear-gradient(90deg,#BDEBC8,#67C88C)}
+.daycard .badge{position:absolute;top:-9px;right:10px;background:var(--coral);color:#7A2A16;font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:999px;box-shadow:0 3px 8px rgba(0,0,0,.08)}
+.daycard .stamp{position:absolute;bottom:10px;right:10px;font-size:22px}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 4px 14px}
+.chip{border-radius:999px;padding:9px 15px;font-size:14px;font-weight:700;background:#fff;box-shadow:var(--shadow)}
+.chip.on{background:var(--y);box-shadow:0 4px 0 #E8B72C}
+
+/* day detail */
+.dayhead{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.dayhead .big{font-size:30px;font-weight:900;letter-spacing:-1px}
+.dayhead .meta{font-size:14px;color:var(--ink2);margin-top:4px}
+.starrow{font-size:28px;letter-spacing:4px;color:#E3D6B5}
+.starrow b{color:#FFB300;font-weight:400}
+.wordlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
+.wordpill{display:flex;align-items:flex-start;gap:8px;background:#FFFDF7;border:2px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;min-height:56px}
+.wordpill>div:first-child{flex:1;min-width:0;padding-right:4px}
+.wordpill .w{font-weight:800;font-size:17px}
+.wordpill .m{font-size:13px;color:var(--ink2);margin-top:2px;line-height:1.3}
+.wordpill .sp{margin-left:auto;margin-top:2px;font-size:18px;opacity:.55;flex:0 0 auto}
+.wordpill.known{background:#F0FBF3;border-color:#CBEBD5}
+.wordpill.unclear{background:#FFF6F0;border-color:#FFD9C7}
+
+/* flashcard */
+.fc-wrap{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:940px) and (orientation:landscape){.fc-wrap{grid-template-columns:1.4fr 1fr;align-items:start}}
+.flipcard{perspective:1400px;cursor:pointer;user-select:none}
+.flipcard .inner{position:relative;width:100%;min-height:clamp(300px,44vh,430px);transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,.8,.4,1)}
+.flipcard.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:28px;background:#fff;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:hidden}
+.face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#FFFBE8,#FFF6D6)}
+.face .word{font-size:clamp(38px,6.2vw,64px);font-weight:900;letter-spacing:-1.5px;line-height:1.05;word-break:break-word}
+.face .pos{margin-top:10px;font-size:17px;color:#8B7A50;font-weight:700}
+.face .meaning{font-size:clamp(24px,3.4vw,34px);font-weight:800;line-height:1.3}
+.face .ex{margin-top:16px;font-size:17px;line-height:1.45;color:#4A4232}
+.face .exko{margin-top:4px;font-size:15px;color:#8B7A50}
+.face .hint{position:absolute;bottom:12px;left:0;right:0;font-size:12.5px;color:#B9A87F}
+.face img{max-height:120px;max-width:60%;border-radius:12px;margin-top:12px;object-fit:contain}
+.btn-round{width:64px;height:64px;border-radius:22px;background:#fff;box-shadow:var(--shadow);font-size:26px;display:inline-flex;align-items:center;justify-content:center}
+.btn-round:active{transform:translateY(2px)}
+.btn-round.on{background:var(--y)}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.mark-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.mark-row .btn{font-size:18px}
+.counter{text-align:center;font-size:14px;color:var(--ink2);margin-top:12px}
+.dots{display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.dots i{width:7px;height:7px;border-radius:50%;background:#E4D9BE;display:block}
+.dots i.on{background:#FFC400}
+.dots i.known{background:#67C88C}
+.dots i.unclear{background:#F0A08A}
+
+/* quiz */
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.q-head .qprog{flex:1;height:12px;border-radius:8px;background:#F1E9D6;overflow:hidden}
+.q-head .qprog>i{display:block;height:100%;background:linear-gradient(90deg,#9AD9F5,#63C0EA);transition:width .3s}
+.q-score{font-weight:800;font-size:15px;color:var(--ink2)}
+.q-word{font-size:clamp(38px,6vw,62px);font-weight:900;text-align:center;letter-spacing:-1.5px;line-height:1.1;word-break:break-word}
+.q-sub{text-align:center;font-size:15px;color:var(--ink2);margin-top:6px}
+.options{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+@media(min-width:760px){.options{grid-template-columns:1fr 1fr}}
+.opt{background:#fff;border-radius:18px;padding:20px 18px;font-size:19px;font-weight:700;box-shadow:var(--shadow);text-align:left;min-height:66px;display:flex;align-items:center;gap:10px;transition:background .15s}
+.opt .num{width:28px;height:28px;border-radius:50%;background:#F4EDD9;color:#8B7A50;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.opt.right{background:#E4F8EC;box-shadow:0 5px 0 #A9DCBF}
+.opt.wrong{background:#FFE7E4;box-shadow:0 5px 0 #F3B3AC}
+.opt:disabled{opacity:1}
+.feedback{text-align:center;font-size:22px;font-weight:900;margin-top:16px;min-height:30px}
+.feedback.good{color:var(--good)}
+.feedback.bad{color:var(--bad)}
+
+/* spelling */
+.spell-box{max-width:640px;margin:0 auto}
+.spell-meaning{font-size:clamp(26px,3.6vw,36px);font-weight:900;text-align:center;line-height:1.25}
+.spell-sub{text-align:center;color:var(--ink2);margin-top:6px;font-size:15px}
+.spell-input{width:100%;margin-top:20px;padding:18px;font-size:28px;font-weight:800;text-align:center;border-radius:18px;border:3px solid var(--line);background:#fff;letter-spacing:1px;outline:none}
+.spell-input:focus{border-color:#FFD84D;box-shadow:0 0 0 4px #FFF3C4}
+.spell-input.bad{border-color:#F3B3AC;background:#FFF2F0}
+.spell-input.good{border-color:#A9DCBF;background:#F1FBF4}
+.hintline{text-align:center;font-size:22px;letter-spacing:6px;color:#B9A87F;margin-top:16px;min-height:30px;font-weight:700}
+.answerbig{text-align:center;font-size:46px;font-weight:900;letter-spacing:1px;margin-top:14px}
+.answerbig em{color:var(--bad);font-style:normal;text-decoration:underline}
+.answerbig.ok em{color:var(--good)}
+
+/* wrong note */
+.wrongrow{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:10px}
+.wrongrow .w{font-size:19px;font-weight:800}
+.wrongrow .m{font-size:14px;color:var(--ink2)}
+.wrongrow .src{font-size:11.5px;color:#A38F63;background:#FFF6DA;border-radius:8px;padding:2px 7px;margin-left:6px}
+.wrongrow .sp{margin-left:auto;display:flex;gap:8px}
+.iconbtn{width:46px;height:46px;border-radius:14px;background:#F7F1E1;font-size:19px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.empty{text-align:center;padding:40px 10px;color:var(--ink2)}
+.empty .em{font-size:52px;display:block;margin-bottom:12px}
+
+/* settings */
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 4px;border-bottom:1px solid var(--line)}
+.setrow:last-child{border-bottom:0}
+.setrow .t{font-weight:800;font-size:16px}
+.setrow .d{font-size:13px;color:var(--ink2);margin-top:3px}
+.switch{width:60px;height:34px;border-radius:999px;background:#E8DEC8;position:relative;transition:background .2s;flex:0 0 auto}
+.switch i{position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 2px 5px rgba(0,0,0,.15)}
+.switch.on{background:#67C88C}
+.switch.on i{left:29px}
+
+/* tabbar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(255,252,242,.92);backdrop-filter:blur(10px);border-top:1px solid #F1E7D2}
+.tabbar .tab{flex:1;max-width:190px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px;border-radius:16px;font-size:11.5px;font-weight:700;color:#9C8B69}
+.tabbar .tab .ic{font-size:22px;line-height:1}
+.tabbar .tab.on{background:#FFF2C6;color:#6B5316}
+.tabbar .tab .cnt{position:absolute;transform:translate(18px,-6px);background:var(--coral);color:#7A2A16;border-radius:999px;font-size:10px;padding:1px 6px;font-weight:800}
+
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:#3E3527;color:#fff;padding:12px 20px;border-radius:16px;font-size:14.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:100;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.result{text-align:center;padding:10px}
+.result .score{font-size:64px;font-weight:900;letter-spacing:-2px}
+.result .score small{font-size:24px;color:var(--ink2)}
+.result .msg{font-size:19px;font-weight:800;margin-top:6px}
+.result .em{font-size:56px;display:block;margin:6px 0}
+.footnote{font-size:12px;color:#A99772;line-height:1.6;margin:22px 6px 0;text-align:center}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <button class="tb-btn" id="btnHome" aria-label="홈으로">🏠</button>
+    <div class="titlewrap">
+      <h1 id="scrTitle">단영의 능률보카</h1>
+      <p id="scrSub">능률VOCA 초등 기본 · 400단어</p>
+    </div>
+    <button class="tb-btn" id="btnVoiceQuick" aria-label="발음 설정">🔈</button>
+  </div>
+
+  <!-- HOME -->
+  <section class="screen active" id="scr-home">
+    <div class="summary">
+      <div class="panel">
+        <span class="pill">⭐ 오늘도 화이팅!</span>
+        <div class="big-num" id="homeKnown">0 <small>/ 406 단어 외웠어요</small></div>
+        <div class="bar"><i id="homeBar" style="width:0%"></i></div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn primary" id="btnResume">이어서 공부하기 →</button>
+          <button class="btn ghost" id="btnToWrong">🤔 오답노트 <span id="homeWrongCnt">0</span></button>
+        </div>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;justify-content:center;gap:6px">
+        <div class="muted" style="font-size:13px;color:var(--ink2)">이번 주 숙제 범위</div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:-.5px">교재 p.130 ~ 135</div>
+        <div style="font-size:13.5px;color:var(--ink2);line-height:1.5">리브르 어학원 숙제 · <b>DAY 22 ~ DAY 23</b> 구간이에요</div>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn coral" data-hw="22">DAY 22</button>
+          <button class="btn coral" data-hw="23">DAY 23</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-sec"><h2>DAY 고르기</h2><span class="muted" id="homeDayStat"></span></div>
+    <div class="chipbar" id="dayFilter">
+      <button class="chip on" data-f="all">전체 40일</button>
+      <button class="chip" data-f="word">새 단어 32일</button>
+      <button class="chip" data-f="review">복습 8일</button>
+      <button class="chip" data-f="todo">아직 안 한 DAY</button>
+      <button class="chip" data-f="star">별 3개 DAY</button>
+    </div>
+    <div class="daygrid" id="dayGrid"></div>
+    <p class="footnote">단어·뜻·예문: NE능률 『능률VOCA 초등 기본』(2025 개정) 공식 어휘 세트(DAY 01~39, 406개)<br>페이지는 교재 DAILY TEST 페이지를 기준으로 계산했어요.</p>
+  </section>
+
+  <!-- DAY -->
+  <section class="screen" id="scr-day">
+    <div class="panel">
+      <div class="dayhead">
+        <div style="flex:1;min-width:220px">
+          <div class="big" id="dayTitle">DAY 01</div>
+          <div class="meta" id="dayMeta"></div>
+          <div class="starrow" id="dayStars">☆☆☆</div>
+        </div>
+        <div style="text-align:right">
+          <div class="big-num" id="dayPct">0<small>%</small></div>
+          <div class="meta">외운 단어</div>
+        </div>
+      </div>
+      <div class="bar"><i id="dayBar" style="width:0%"></i></div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn primary" id="dayBtnCards">🃏 카드로 공부</button>
+        <button class="btn sky" id="dayBtnQuiz">📝 뜻 고르기 퀴즈</button>
+        <button class="btn mint" id="dayBtnSpell">✏️ 스펠링 받아쓰기</button>
+      </div>
+    </div>
+    <div class="h-sec"><h2>단어 목록</h2><span class="muted">단어를 누르면 발음이 나와요</span></div>
+    <div class="wordlist" id="dayWords"></div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="screen" id="scr-cards">
+    <div class="fc-wrap">
+      <div>
+        <div class="flipcard" id="flipcard">
+          <div class="inner">
+            <div class="face front">
+              <div class="word" id="cardWord">word</div>
+              <div class="pos" id="cardPos"></div>
+              <div class="hint">카드를 누르면 뜻이 보여요</div>
+            </div>
+            <div class="face back">
+              <div class="meaning" id="cardMean"></div>
+              <div class="ex" id="cardEx"></div>
+              <div class="exko" id="cardExKo"></div>
+              <img id="cardImg" alt="" style="display:none">
+            </div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn-round" id="cardPrev" aria-label="이전">◀️</button>
+          <button class="btn-round" id="cardSpeak" aria-label="발음">🔊</button>
+          <button class="btn-round" id="cardSlow" aria-label="느리게">🐢</button>
+          <button class="btn-round" id="cardExSpeak" aria-label="예문 듣기">📖</button>
+          <button class="btn-round" id="cardNext" aria-label="다음">▶️</button>
+        </div>
+        <div class="counter" id="cardCounter">1 / 14</div>
+        <div class="dots" id="cardDots"></div>
+      </div>
+      <div>
+        <div class="mark-row">
+          <button class="btn mint" id="markKnown">😀 외웠어요</button>
+          <button class="btn coral" id="markUnclear">🤔 헷갈려요</button>
+        </div>
+        <div class="panel" style="margin-top:14px">
+          <div style="font-size:13.5px;color:var(--ink2);line-height:1.6">
+            • <b>외웠어요</b>를 누르면 이 DAY 완료율이 올라가요.<br>
+            • <b>헷갈려요</b>는 오답노트에 자동으로 담겨요.<br>
+            • 🔊는 교재 원어민 음원, 🐢는 천천히 들려줘요.
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn sky" id="cardToQuiz">퀴즈로 넘어가기 →</button>
+        </div>
+        <div class="panel" style="margin-top:14px" id="cardJumpPanel"><div style="font-size:13px;color:var(--ink2);margin-bottom:8px">단어 골라 보기</div><div id="cardJump" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="scr-quiz">
+    <div class="q-head">
+      <div class="qprog"><i id="quizBar" style="width:0%"></i></div>
+      <div class="q-score" id="quizScore">0 / 0</div>
+    </div>
+    <div class="panel" id="quizBody">
+      <div class="q-word" id="quizWord"></div>
+      <div style="text-align:center;margin-top:6px"><button class="chip" id="quizEyes" style="font-size:12.5px">👀 단어 가리기</button></div>
+      <div class="q-sub" id="quizSub">알맞은 뜻을 골라 보세요</div>
+      <div class="controls" style="margin-top:8px">
+        <button class="btn-round" id="quizSpeak">🔊</button>
+      </div>
+      <div class="options" id="quizOptions"></div>
+      <div class="feedback" id="quizFeedback"></div>
+      <div class="btn-row" style="justify-content:center;margin-top:8px">
+        <button class="btn primary" id="quizNext" style="display:none">다음 문제 →</button>
+      </div>
+    </div>
+    <div class="panel" id="quizResult" style="display:none"></div>
+  </section>
+
+  <!-- SPELLING -->
+  <section class="screen" id="scr-spell">
+    <div class="q-head">
+      <div class="qprog"><i id="spellBar" style="width:0%"></i></div>
+      <div class="q-score" id="spellScore">0 / 0</div>
+    </div>
+    <div class="panel spell-box" id="spellBody">
+      <div class="spell-meaning" id="spellMean"></div>
+      <div class="spell-sub" id="spellSub">뜻을 보고 영어 단어를 써 보세요</div>
+      <div class="controls" style="margin-top:6px">
+        <button class="btn-round" id="spellSpeak">🔊</button>
+      </div>
+      <div class="hintline" id="spellHintLine"></div>
+      <input class="spell-input" id="spellInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="영어로 입력">
+      <div class="btn-row" style="margin-top:14px;justify-content:center">
+        <button class="btn primary" id="spellCheck">확인</button>
+        <button class="btn ghost" id="spellHintBtn">💡 첫 글자 힌트</button>
+        <button class="btn ghost" id="spellSkip">모르겠어요</button>
+      </div>
+      <div class="answerbig" id="spellAnswer"></div>
+      <div class="feedback" id="spellFeedback"></div>
+      <div class="btn-row" style="justify-content:center;margin-top:10px">
+        <button class="btn primary" id="spellNext" style="display:none">다음 →</button>
+      </div>
+    </div>
+    <div class="panel" id="spellResult" style="display:none"></div>
+  </section>
+
+  <!-- WRONG NOTE -->
+  <section class="screen" id="scr-wrong">
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="big-num" id="wrongCount">0<small>개 단어</small></div>
+          <div class="meta" style="font-size:13.5px;color:var(--ink2)">퀴즈·받아쓰기에서 틀리거나 '헷갈려요' 한 단어예요.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="wrongCards">🃏 카드로 복습</button>
+          <button class="btn sky" id="wrongQuiz">📝 퀴즈</button>
+          <button class="btn mint" id="wrongSpell">✏️ 받아쓰기</button>
+        </div>
+      </div>
+    </div>
+    <div class="h-sec"><h2>오답 단어</h2><button class="btn ghost" id="wrongClear" style="font-size:13px;padding:9px 14px;min-height:0">전체 비우기</button></div>
+    <div id="wrongList"></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="screen" id="scr-settings">
+    <div class="panel">
+      <div class="setrow">
+        <div><div class="t">자동 발음</div><div class="d">퀴즈 문제가 나오면 단어를 자동으로 들려줘요</div></div>
+        <div class="switch" id="swAuto"><i></i></div>
+      </div>
+      <div class="setrow">
+        <div><div class="t">느리게 재생 기본</div><div class="d">발음 속도를 처음부터 천천히 (0.65배)</div></div>
+        <div class="switch" id="swSlow"><i></i></div>
+      </div>
+      <div class="setrow">
+        <div><div class="t">교재 원어민 음원</div><div class="d">끄면 기기 음성(TTS)으로만 들려줘요 · 인터넷이 느릴 때 유용</div></div>
+        <div class="switch on" id="swMp3"><i></i></div>
+      </div>
+      <div class="setrow">
+        <div><div class="t">학습 기록 지우기</div><div class="d">외운 단어·별·오답노트가 모두 사라져요</div></div>
+        <button class="btn coral" id="btnReset" style="padding:12px 18px;font-size:15px">초기화</button>
+      </div>
+    </div>
+    <p class="footnote">단영이 화이팅! 🌟 이 화면은 아이패드 세로·가로 모두에서 쓸 수 있어요.</p>
+  </section>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" data-scr="home"><span class="ic">🏠</span>홈</button>
+  <button class="tab" data-scr="wrong"><span class="ic">🤔</span>오답노트<span class="cnt" id="tabWrongCnt" style="display:none">0</span></button>
+  <button class="tab" data-scr="settings"><span class="ic">⚙️</span>설정</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"book":"능률VOCA 초등 기본 (2025 개정)","total":406,"days":[{"d":"01","p":[9,14],"w":[["fun","[명] 재미, 즐거움","Have fun!","재미있게 보내!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_fun.mp3"],["bed","[명] 침대","This is my bed.","이것은 내 침대이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_bed.mp3"],["book","[명] 책","This book is funny.","이 책은 재미있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_book.mp3"],["name","[명] 이름","What is your name?","너의 이름은 무엇이니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_name.mp3"],["play","[동] 1. 놀다 2. 경기를 하다","Don’t play on the bed.","침대 위에서 놀지 말아라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_play.mp3"],["player","[명] 선수","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221020/912af0dff974604f1321254ca8ff38b6.mp3"],["go","[동] 가다","Let’s go and play.","가서 놀자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_go.mp3"],["school","[명] 학교","We go to this school.","우리는 이 학교에 다닌다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_school.mp3"],["like","[동] 좋아하다","We like our school.","우리는 우리 학교를 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_like.mp3"],["read","[동] 읽다","I read a book.","나는 책을 읽는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_read.mp3"],["reader","[명] 독자(책을 읽는 사람)","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221018/1de9b0a30075ae8c303eb420c103c320.mp3"],["have","[동] 가지다","I have a phone.","나는 전화기를 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_have.mp3"],["lesson","[명] 수업","Do you have a piano lesson today?","너는 오늘 피아노 수업이 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_lesson.mp3"],["together","[부] 함께, 같이","They play together.","그들은 함께 논다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY01_together.mp3"]]},{"d":"02","p":[15,20],"w":[["pizza","[명] 피자","Do you like pizza?","너는 피자를 좋아하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_pizza.mp3"],["sit","[동] 앉다","Let’s sit together.","같이 앉자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_sit.mp3"],["good","[형] 좋은, 괜찮은","That’s a good school.","그곳은 좋은 학교이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_good.mp3"],["class","[명] 1. 반, 학급 2. 수업","Our class is reading a book together.","우리 반은 함께 책을 읽고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_class.mp3"],["hair","[명] 머리카락","I have brown hair.","나는 갈색 머리카락을 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_hair.mp3"],["write","[동] 쓰다","He is writing a book.","그는 책을 쓰고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_write.mp3"],["writer","[명] 작가","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221021/a82feee3cc1af8bcabda979e8775ef0f.mp3"],["time","[명] 시간","What time is it?","몇 시니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_time.mp3"],["soccer","[명] 축구","Sam is a good soccer player.","샘은 훌륭한 축구 선수이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_soccer.mp3"],["can","[동] ~할 수 있다","I can play soccer.","나는 축구를 할 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_can.mp3"],["look","[동] (의도적으로) 보다, 바라보다","Look at the book.","그 책을 봐라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_look.mp3"],["please","[부] 제발","Please look at me.","제발 저를 좀 봐 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_please.mp3"],["world","[명] 세계","The world is big.","세계는 크다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY02_world.mp3"]]},{"d":"03","p":[21,26],"w":[["hat","[명] 모자","My hat is red.","내 모자는 빨간색이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_hat.mp3"],["up","[부] 위로","She is looking up.","그녀는 위를 올려다보고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_up.mp3"],["old","[형] 1. 나이 든 2. 오래된","The writer is an old man.","그 작가는 나이 든 남자이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_old.mp3"],["great","[형] 훌륭한, 멋진","He writes great books.","그는 훌륭한 책들을 쓴다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_great.mp3"],["song","[명] 노래","I love old songs.","나는 오래된 노래들을 정말 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_song.mp3"],["listen","[동] (귀 기울여) 듣다","Listen to this song.","이 노래를 들어봐.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_listen.mp3"],["day","[명] 1. 하루, 날 2. 낮","Have a great day!","멋진 하루 보내!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_day.mp3"],["want","[동] 원하다","I want a new bed.","나는 새 침대를 원한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_want.mp3"],["and","[접] ~와, 그리고","Do you want pizza and a salad?","너는 피자와 샐러드를 원하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_and.mp3"],["study","[동] 공부하다, 배우다","[명] 공부 We study English at school.","우리는 학교에서 영어를 공부한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_study.mp3"],["summer","[명] 여름","He doesn’t play soccer in the summer.","그는 여름에는 축구를 하지 않는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_summer.mp3"],["picture","[명] 1. 그림 2. 사진","The pictures are great.","그 그림들이 멋지다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY03_picture.mp3"]]},{"d":"04","p":[27,32],"w":[["bag","[명] 가방","What is in your bag?","네 가방에 무엇이 들어 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_bag.mp3"],["dog","[명] 개","An old dog is sitting on the bed.","늙은 개 한 마리가 침대에 앉아 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_dog.mp3"],["who","[대] 누구","Who is she?","그녀는 누구인가요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_who.mp3"],["week","[명] 일주일","I go to school five days a week.","나는 일주일에 5일 동안 학교에 간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_week.mp3"],["today","[부] 오늘은","[명] 오늘 We have a test today.","우리는 오늘 시험이 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_today.mp3"],["story","[명] 이야기","I’m reading a funny story.","나는 재미있는 이야기를 읽고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_story.mp3"],["talk","[동] 말하다","He talks to his mom a lot.","그는 엄마에게 말을 많이 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_talk.mp3"],["do","[동] (어떤 일이나 행동을) 하다","What are you doing now?","너는 지금 무엇을 하고 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_do.mp3"],["check","[동] 확인하다","[명] 확인 Can you check your bag?","너의 가방을 확인해 볼 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_check.mp3"],["happy","[형] 행복한, 기쁜","I am happy today.","나는 오늘 행복하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_happy.mp3"],["tiger","[명] 호랑이","Look at the white tiger.","저 하얀 호랑이 좀 봐.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_tiger.mp3"],["homework","[명] 숙제","I’m doing my homework.","나는 숙제를 하는 중이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY04_homework.mp3"]]},{"d":"06","p":[37,42],"w":[["cap","[명] (앞에만 챙이 달린) 모자","Is this your cap?","이거 네 모자니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_cap.mp3"],["jump","[동] 뛰어오르다","[명] 뜀질 I can jump high.","나는 높이 뛸 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_jump.mp3"],["watch","[명] 손목시계","She looked at her watch.","그녀는 그녀의 손목시계를 보았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_watch.mp3"],["friend","[명] 친구","He is an old friend.","그는 오랜 친구이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_friend.mp3"],["music","[명] 음악","I’m listening to music.","나는 음악을 듣고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_music.mp3"],["in","[전] ~안에","My watch is in my bag.","내 손목시계는 내 가방 안에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_in.mp3"],["room","[명] 방","Jimin is in his room.","지민이는 자기 방에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_room.mp3"],["take","[동] 데려가다, 가져가다","Take your friend to your room.","네 친구를 네 방으로 데려가라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_take.mp3"],["turn","[동] 돌다, 돌리다","Turn right.","오른쪽으로 도세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_turn.mp3"],["put","[동] 놓다, 넣다","I put my cap on the bed.","나는 내 모자를 침대 위에 놓았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_put.mp3"],["science","[명] 과학","I checked my science homework.","나는 과학 숙제를 확인했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_science.mp3"],["scientist","[명] 과학자","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20230511/eaf82fa7e2c09d748dcbae4b4b09abe8.mp3"],["breakfast","[명] 아침 식사","What do you want for breakfast?","너는 아침 식사로 무엇을 원하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY06_breakfast.mp3"]]},{"d":"07","p":[43,48],"w":[["big","[형] (크기ㆍ수치가) 큰","I have a big dog.","나는 큰 개가 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_big.mp3"],["box","[명] 상자","Put books in a big box.","책들을 큰 상자에 넣어라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_box.mp3"],["about","[전] ~에 대해, ~에 대한","We are talking about our homework.","우리는 숙제에 대해 말하고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_about.mp3"],["movie","[명] 영화","The movie is about music.","그 영화는 음악에 대한 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_movie.mp3"],["word","[명] 단어","I can read this word.","나는 이 단어를 읽을 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_word.mp3"],["say","[동] 말하다","Please say hello to Sara.","사라에게 안녕이라고 말해 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_say.mp3"],["birthday","[명] 생일","Happy birthday!","생일 축하해!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_birthday.mp3"],["will","[동] ~할 것이다, ~일 것이다","She will study for the science test.","그녀는 과학 시험을 위해 공부할 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_will.mp3"],["sing","[동] 노래하다","Let’s sing this song together.","이 노래를 함께 부르자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_sing.mp3"],["singer","[명] 가수","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20240517/05011fc72802a0682d39fbe330224b60.mp3"],["bike","[명] 자전거","I want a bike for my birthday.","나는 내 생일에 자전거를 원한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_bike.mp3"],["library","[명] 도서관","Don’t sing in the library.","도서관 안에서 노래하지 말아라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_library.mp3"],["festival","[명] 축제","I will go to the music festival.","나는 음악 축제에 갈 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY07_festival.mp3"]]},{"d":"08","p":[49,54],"w":[["sad","[형] 슬픈","I don’t like sad stories.","나는 슬픈 이야기를 좋아하지 않는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_sad.mp3"],["run","[동] 달리다","Don’t run in the classroom.","교실에서 뛰지 말아라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_run.mp3"],["ball","[명] 공","Where is my ball?","내 공이 어디에 있지?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_ball.mp3"],["on","[전] ~위에","Your ball is on the box.","네 공은 상자 위에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_on.mp3"],["many","[형] (수가) 많은","I have many friends.","나는 많은 친구들이 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_many.mp3"],["color","[명] 색(깔)","What color is your bike?","너의 자전거는 무슨 색이니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_color.mp3"],["colorful","[형] 알록달록한","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20230320/e280d65e42e993c702cf177b2cdfdb3a.mp3"],["come","[동] 오다","Please come to my birthday party.","제발 내 생일 파티에 와 줘.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_come.mp3"],["angry","[형] 화난","I’m angry at my friend.","나는 내 친구에게 화났다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_angry.mp3"],["speak","[동] 말하다, 이야기하다","He can speak English.","그는 영어를 말할 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_speak.mp3"],["water","[명] 물","I want some water, please.","저는 물을 좀 원합니다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_water.mp3"],["morning","[명] 아침","What do you do in the morning?","너는 아침에 무엇을 하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_morning.mp3"],["afternoon","[명] 오후","Let’s play badminton in the afternoon!","오후에 배드민턴 치자!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY08_afternoon.mp3"]]},{"d":"09","p":[55,60],"w":[["pen","[명] 펜","Do you have a pen?","너는 펜이 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_pen.mp3"],["desk","[명] 책상","My red pen is on my desk.","내 빨간색 펜은 내 책상 위에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_desk.mp3"],["toy","[명] 장난감","The big toy is on the bed.","그 큰 장난감은 침대 위에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_toy.mp3"],["see","[동] (무의식적으로) 보다","You can see many toys in his room.","너는 그의 방에서 많은 장난감을 볼 수 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_see.mp3"],["for","[전] ~을 위해","This is for you.","이것은 너를 위한 거야.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_for.mp3"],["smell","[동] 냄새가 나다","[명] 냄새 The pizza smells good.","피자에서 좋은 냄새가 난다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_smell.mp3"],["under","[전] ~아래에","A box is under the desk.","상자가 책상 아래에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_under.mp3"],["swim","[동] 수영하다, 헤엄치다","Can you swim?","너는 수영할 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_swim.mp3"],["make","[동] 만들다","I will make a cake for my dad.","나는 아빠를 위해 케이크를 만들 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_make.mp3"],["ready","[형] 준비가 된","Are you ready?","너는 준비가 다 됐니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_ready.mp3"],["weekend","[명] 주말","We go swimming on the weekend.","우리는 주말에 수영하러 간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_weekend.mp3"],["tomorrow","[부] 내일","[명] 내일 See you tomorrow.","내일 봐.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY09_tomorrow.mp3"]]},{"d":"11","p":[65,70],"w":[["cat","[명] 고양이","A cat is playing with a ball.","고양이가 공을 가지고 놀고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_cat.mp3"],["robot","[명] 로봇","The robot can run.","그 로봇은 달릴 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_robot.mp3"],["chicken","[명] 닭, 닭고기","The chicken doesn’t like water.","그 닭은 물을 좋아하지 않는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_chicken.mp3"],["student","[명] 학생","The students are studying.","그 학생들이 공부하고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_student.mp3"],["goal","[명] 목표","What is your goal for the new year?","너의 새해 목표는 뭐야?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_goal.mp3"],["dance","[동] 춤을 추다","Let’s dance to this song.","이 노래에 맞춰 춤을 추자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_dance.mp3"],["eat","[동] 먹다","I can’t eat chicken.","나는 닭고기를 못 먹는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_eat.mp3"],["park","[명] 공원","What can you see in the park?","공원에서 무엇이 보이니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_park.mp3"],["there","[부] 거기에","What will you do there?","너는 거기에서 무엇을 할 거니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_there.mp3"],["now","[부] 지금","It is two o’clock now.","지금은 두 시야.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_now.mp3"],["weather","[명] 날씨","How’s the weather now?","지금 날씨 어때?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_weather.mp3"],["exercise","[동] 운동하다","[명] 운동 I exercise in the park.","나는 공원에서 운동한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY11_exercise.mp3"]]},{"d":"12","p":[71,76],"w":[["hot","[형] 1. 더운 2. 뜨거운","I don’t like hot weather.","나는 더운 날씨를 좋아하지 않아.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_hot.mp3"],["pig","[명] 돼지","Pigs are great swimmers.","돼지들은 훌륭한 수영 선수들이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_pig.mp3"],["lunch","[명] 점심 식사","It’s time for lunch.","점심 식사 시간이야.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_lunch.mp3"],["brother","[명] 형, 오빠, 남동생","This is my brother.","이 아이는 내 남동생이야.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_brother.mp3"],["house","[명] 집, 주택","Come to my house this weekend.","이번 주말에 우리 집에 와.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_house.mp3"],["left","[형] 왼쪽의","[명] 왼쪽 My brother is sitting on my left side.","내 남동생은 내 왼쪽에 앉아 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_left.mp3"],["from","[전] ~에서, ~으로부터","He is from China.","그는 중국에서 왔다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_from.mp3"],["eraser","[명] 지우개","My eraser is on the desk.","내 지우개는 책상 위에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_eraser.mp3"],["visit","[동] 방문하다","[명] 방문 I will visit you tomorrow.","내가 내일 너를 방문할게.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_visit.mp3"],["visitor","[명] 방문객","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20220929/127870930d65c57ee65fcc47f2170d38.mp3"],["short","[형] 1. (길이ㆍ거리가) 짧은 2. 키가 작은","My brother has short hair.","우리 오빠는 머리카락이 짧다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_short.mp3"],["delicious","[형] 아주 맛있는","Our school lunch is delicious.","우리 학교 점심은 아주 맛있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_delicious.mp3"],["baseball","[명] 야구","We play baseball in the park.","우리는 공원에서 야구를 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY12_baseball.mp3"]]},{"d":"13","p":[77,82],"w":[["car","[명] 차, 자동차","My toy car is big.","내 장난감 자동차는 크다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_car.mp3"],["milk","[명] 우유","My brother likes milk.","우리 형은 우유를 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_milk.mp3"],["out","[부] 밖에","I can’t go out and play.","나는 밖에 나가서 놀 수 없다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_out.mp3"],["pants","[명] 바지","How much are these pants?","이 바지는 얼마예요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_pants.mp3"],["sound","[명] 소리","[동] ~처럼 들리다 Pigs make funny sounds.","돼지는 웃긴 소리를 낸다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_sound.mp3"],["what","[대] 무엇","What is in the box?","상자 안에 무엇이 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_what.mp3"],["food","[명] 음식","This food smells delicious.","이 음식은 맛있는 냄새가 난다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_food.mp3"],["learn","[동] 배우다","We will learn about robots.","우리는 로봇에 대해 배울 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_learn.mp3"],["save","[동] 구하다","He saved me from the fire.","그는 화재로부터 나를 구했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_save.mp3"],["join","[동] 가입하다, 참가하다","Will you join our baseball team?","너 우리 야구팀에 가입할래?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_join.mp3"],["should","[동] ~해야 한다","You should learn English.","너는 영어를 배워야 해.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_should.mp3"],["basketball","[명] 농구","I’m on the school basketball team.","나는 학교 농구팀에 속해 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY13_basketball.mp3"]]},{"d":"14","p":[83,88],"w":[["apple","[명] 사과","How many apples are in the box?","상자 안에 사과가 몇 개 있나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_apple.mp3"],["fish","[명] 물고기, 생선","That fish is big and red.","저 물고기는 크고 빨갛다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_fish.mp3"],["chair","[명] 의자","Please sit in your chair.","당신의 의자에 앉으세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_chair.mp3"],["sister","[명] 언니, 누나, 여동생","My sister doesn’t eat fish.","우리 언니는 생선을 먹지 않는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_sister.mp3"],["clock","[명] 시계","I looked at the clock.","나는 시계를 보았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_clock.mp3"],["some","[형] 몇몇의, 약간의","I have some green apples.","나는 초록색 사과를 몇 개 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_some.mp3"],["help","[동] 돕다","[명] 도움 Can you help me?","나를 도와줄 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_help.mp3"],["helpful","[형] 도움이 되는","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221015/c158b33d64e5bf549328f8d8c8332fac.mp3"],["touch","[동] 만지다","You should not touch the paint.","그 페인트를 만지면 안 된다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_touch.mp3"],["know","[동] 알다, 알고 있다","I know his sister.","나는 그의 여동생을 알아.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_know.mp3"],["long","[형] (길이ㆍ거리가) 긴","These pants are long for me.","이 바지는 나에게 길다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_long.mp3"],["family","[명] 가족","My family and I are from Korea.","우리 가족과 나는 한국에서 왔다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_family.mp3"],["person","[명] 사람","Do you know this person?","너는 이 사람을 알아?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY14_person.mp3"]]},{"d":"16","p":[93,98],"w":[["club","[명] 동아리","Our school has a dance club.","우리 학교에는 춤 동아리가 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_club.mp3"],["plan","[명] 계획","[동] 계획하다 What’s your plan for today?","오늘 너의 계획이 뭐야?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_plan.mp3"],["home","[명] 집, 가정","You should help your mom at home.","너는 집에서 엄마를 도와야 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_home.mp3"],["shirt","[명] 셔츠","I want this pink shirt.","나는 이 핑크색 셔츠를 원해.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_shirt.mp3"],["piano","[명] 피아노","She plays the piano every day.","그녀는 매일 피아노를 연주한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_piano.mp3"],["bad","[형] 나쁜, 안 좋은","The weather is bad today.","오늘은 날씨가 안 좋다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_bad.mp3"],["work","[동] 일하다","[명] 일 She works at a library.","그녀는 도서관에서 일한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_work.mp3"],["find","[동] 찾다, 발견하다","I can’t find my shirt.","나는 내 셔츠를 찾을 수가 없다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_find.mp3"],["push","[동] 밀다","Let’s push the chairs together.","같이 의자를 밀자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_push.mp3"],["cold","[형] 1. 추운 2. 차가운","It is so cold.","날씨가 너무 춥다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_cold.mp3"],["umbrella","[명] 우산","Can you find my umbrella?","내 우산 좀 찾아줄 수 있어?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_umbrella.mp3"],["thank","[동] 감사하다","Thank you for your time.","시간을 내주셔서 감사합니다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY16_thank.mp3"]]},{"d":"17","p":[99,104],"w":[["uncle","[명] 삼촌, 이모부, 고모부","My uncle will visit my family.","우리 삼촌이 우리 가족을 방문할 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_uncle.mp3"],["dress","[명] 드레스, 원피스","Do you like this dress?","너는 이 드레스가 마음에 드니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_dress.mp3"],["meet","[동] 만나다","When will you meet your uncle?","너는 언제 네 삼촌을 만날 거니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_meet.mp3"],["meeting","[명] 회의","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20230508/d48788168076b999d36c4f3ccb75ba2f.mp3"],["dinner","[명] 저녁 식사","Dinner is ready.","저녁 식사 준비가 다 됐어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_dinner.mp3"],["evening","[명] 저녁","I eat at home in the evening.","나는 저녁에 집에서 밥을 먹는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_evening.mp3"],["ice","[명] 얼음","Put ice in your water.","네 물에 얼음을 넣어라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_ice.mp3"],["very","[부] 매우, 아주","The dinner was very good.","저녁 식사는 매우 좋았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_very.mp3"],["art","[명] 미술, 예술","He is very good at art.","그는 미술을 매우 잘한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_art.mp3"],["draw","[동] 그리다","I’m drawing a picture.","나는 그림을 그리고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_draw.mp3"],["use","[동] 사용하다","[명] 사용 Can I use your eraser?","내가 네 지우개를 사용해도 되니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_use.mp3"],["useful","[형] 유용한","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20240603/5e8a2485fe1afd338ff571da7e846cd3.mp3"],["scissors","[명] 가위","I don’t have scissors.","나는 가위가 없어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_scissors.mp3"],["season","[명] 계절","Korea has four seasons.","한국은 사계절이 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY17_season.mp3"]]},{"d":"18","p":[105,110],"w":[["fox","[명] 여우","The fox is eating a fish.","여우가 물고기를 먹고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_fox.mp3"],["duck","[명] 오리","A duck is swimming in the cold water.","오리가 차가운 물에서 헤엄치고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_duck.mp3"],["egg","[명] 알, 달걀","Duck eggs are big.","오리알은 크다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_egg.mp3"],["star","[명] 별","She is drawing a yellow star.","그녀는 노란색 별을 그리는 중이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_star.mp3"],["pencil","[명] 연필","I’m writing with a pencil.","나는 연필로 글을 쓰고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_pencil.mp3"],["how","[부] 1. 어떻게 2. 얼마나","How do I use this computer?","이 컴퓨터는 어떻게 사용하나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_how.mp3"],["shop","[명] 가게, 상점","I go to my uncle’s shop.","나는 우리 삼촌네 가게에 간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_shop.mp3"],["next","[형] 다음의","[부] 다음에 What’s your next plan?","너의 다음 계획은 뭐야?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_next.mp3"],["doctor","[명] 의사","You should see a doctor.","너는 의사를 만나야 해. (진찰을 받아야 해.)","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_doctor.mp3"],["open","[형] 열려 있는","[동] 열다 The shop is open today.","그 가게는 오늘 열려 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_open.mp3"],["notebook","[명] 공책","Draw a picture in your notebook.","네 공책에 그림을 그려라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_notebook.mp3"],["welcome","[동] 환영하다","Welcome to my house.","우리 집에 온 걸 환영해.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY18_welcome.mp3"]]},{"d":"19","p":[111,116],"w":[["sick","[형] 아픈","Doctors help sick people.","의사들은 아픈 사람들을 돕는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_sick.mp3"],["king","[명] 왕","The king is old and sick.","그 왕은 나이 들고 아프다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_king.mp3"],["cook","[동] 요리하다","[명] 요리사 Who will cook dinner today?","오늘은 누가 저녁을 요리할 건가요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_cook.mp3"],["night","[명] 밤","We can see stars at night.","우리는 밤에 별을 볼 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_night.mp3"],["sun","[명] 태양, 해","The sun goes down in the evening.","태양은 저녁에 진다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_sun.mp3"],["sunny","[형] 화창한","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20231201/533c5ba8368075db8f6ef201546bd71a.mp3"],["where","[부] 어디에","Where are you from?","너는 어디에서 왔니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_where.mp3"],["kitchen","[명] 부엌","She’s cooking in the kitchen.","그녀는 부엌에서 요리하는 중이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_kitchen.mp3"],["walk","[동] 걷다","[명] 걷기, 산책 Do not walk on the ice.","얼음 위를 걷지 마세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_walk.mp3"],["wash","[동] 씻다, 세탁하다","My dad is washing the car.","우리 아빠는 세차를 하고 계신다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_wash.mp3"],["drink","[동] (음료를) 마시다","[명] 음료, 마실 것 Drink this hot tea.","이 뜨거운 차를 마셔라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_drink.mp3"],["yesterday","[부] 어제는","[명] 어제 I washed my hair yesterday.","나는 어제 머리를 감았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_yesterday.mp3"],["violin","[명] 바이올린","She is playing the violin.","그녀는 바이올린을 연주하고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY19_violin.mp3"]]},{"d":"21","p":[121,126],"w":[["belt","[명] 허리띠, 벨트","Where is my belt?","내 허리띠는 어디에 있지?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_belt.mp3"],["man","[명] 남자","Who is the man in the picture?","그 사진 속 남자는 누구인가요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_man.mp3"],["father","[명] 아버지, 아빠","What does your father do?","너의 아버지는 무슨 일을 하시니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_father.mp3"],["pilot","[명] 조종사","My father is a pilot.","우리 아버지는 조종사셔.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_pilot.mp3"],["trip","[명] (짧은) 여행","We had a school trip yesterday.","우리는 어제 수학여행을 다녀왔어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_trip.mp3"],["close","[동] 닫다","The library will close for a week.","그 도서관은 일주일 동안 문을 닫을 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_close.mp3"],["skate","[동] 스케이트를 타다","[명] 스케이트 신발 We can skate on the ice.","우리는 얼음 위에서 스케이트를 탈 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_skate.mp3"],["life","[명] 생활","How is your school life?","너의 학교생활은 어떠니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_life.mp3"],["down","[부] 아래로","Come and sit down.","와서 앉아라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_down.mp3"],["every","[형] 모든","Every student should join a club.","모든 학생은 동아리에 가입해야 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_every.mp3"],["police","[명] 경찰","The police saved the man.","경찰이 그 남자를 구했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_police.mp3"],["restaurant","[명] 식당","The restaurant closes at 9:00 p.m.","그 식당은 저녁 9시에 문을 닫는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY21_restaurant.mp3"]]},{"d":"22","p":[127,132],"w":[["jam","[명] 잼","My sister likes apple jam.","내 여동생은 사과잼을 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_jam.mp3"],["son","[명] 아들","The man plays soccer with his son.","그 남자는 아들과 함께 축구를 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_son.mp3"],["idea","[명] 생각, 아이디어","I have a good idea.","나에게 좋은 생각이 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_idea.mp3"],["shoe","[명] 신, 신발","These are my father’s shoes.","이것은 우리 아빠의 신발이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_shoe.mp3"],["well","[부] 잘, 제대로","She sings very well.","그녀는 노래를 매우 잘 부른다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_well.mp3"],["live","[동] 살다","Where do you live?","너는 어디에 사니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_live.mp3"],["fall","[동] 떨어지다","How did the book fall off the desk?","그 책이 책상에서 어떻게 떨어졌지?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_fall.mp3"],["small","[형] (크기가) 작은","The small shoes are for her son.","그 작은 신발은 그녀의 아들을 위한 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_small.mp3"],["stand","[동] 서다","Stand up, please.","일어서 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_stand.mp3"],["when","[부] 언제","When does the shop close?","그 가게는 문을 언제 닫나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_when.mp3"],["early","[부] 일찍","[형] 이른 The restaurant opens very early.","그 식당은 문을 매우 일찍 연다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_early.mp3"],["borrow","[동] 빌리다","Can I borrow your umbrella?","내가 너의 우산을 빌릴 수 있을까?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY22_borrow.mp3"]]},{"d":"23","p":[133,138],"w":[["tent","[명] 텐트, 천막","How big is your tent?","너의 텐트는 얼마나 크니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_tent.mp3"],["boy","[명] 남자아이, 소년","That boy is my brother.","저 남자아이는 내 남동생이야.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_boy.mp3"],["table","[명] 탁자, 식탁","The jam is on the table.","그 잼은 탁자 위에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_table.mp3"],["boat","[명] (작은) 배, 보트","Four people can sit in this boat.","이 배에는 네 사람이 앉을 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_boat.mp3"],["sleep","[동] (잠을) 자다","[명] 잠 What time do you sleep?","너는 몇 시에 자니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_sleep.mp3"],["sleepy","[형] 졸린","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221004/13365d367683301ee26d9d76d25c518b.mp3"],["sure","[형] 확신하는, 확실한","Are you sure about the answer?","너는 그 답에 대해 확신하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_sure.mp3"],["lion","[명] 사자","Lions sleep a lot.","사자는 잠을 많이 잔다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_lion.mp3"],["stay","[동] 머무르다","[명] 머무름 We stay at home on weekends.","우리는 주말마다 집에 머무른다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_stay.mp3"],["enter","[동] 들어가다","You can enter the classroom now.","너는 지금 교실에 들어갈 수 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_enter.mp3"],["nose","[명] 코","Rudolph has a red nose.","루돌프는 빨간 코를 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_nose.mp3"],["grandfather","[명] 할아버지","My grandfather is staying in a hotel.","우리 할아버지는 호텔에서 머무르고 계신다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_grandfather.mp3"],["textbook","[명] 교과서","Look at the pictures in your textbook.","교과서에 있는 그림들을 보세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY23_textbook.mp3"]]},{"d":"24","p":[139,144],"w":[["fan","[명] (스포츠ㆍ연예인 등의) 팬","They are soccer fans.","그들은 축구 팬이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_fan.mp3"],["map","[명] 지도","Can you read a map?","너는 지도를 읽을 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_map.mp3"],["nice","[형] 1. 좋은, 멋진 2. 친절한","She is a nice friend.","그녀는 좋은 친구다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_nice.mp3"],["bread","[명] 빵","I eat bread for breakfast.","나는 아침으로 빵을 먹는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_bread.mp3"],["tree","[명] 나무","My father is sleeping under a tree.","우리 아빠는 나무 아래에서 주무시고 계신다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_tree.mp3"],["bird","[명] 새","Birds live in trees.","새들은 나무에 산다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_bird.mp3"],["fly","[동] 날다","Chickens cannot fly.","닭은 날 수 없다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_fly.mp3"],["cute","[형] 귀여운, 예쁜","My puppy is small and cute.","우리 강아지는 작고 귀엽다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_cute.mp3"],["bring","[동] 가져오다, 데려오다","Bring your textbook tomorrow.","내일은 네 교과서를 가져와.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_bring.mp3"],["new","[형] 새로운","Your new bike is nice.","너의 새로운 자전거는 멋지다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_new.mp3"],["hospital","[명] (큰) 병원","Doctors work in hospitals.","의사들은 병원에서 일한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_hospital.mp3"],["present","[명] 선물","I have a present for you.","너를 위한 선물이 있어.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY24_present.mp3"]]},{"d":"26","p":[149,154],"w":[["bath","[명] 목욕","I will take a bath.","나는 목욕을 할 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_bath.mp3"],["sky","[명] 하늘","Look up at the blue sky!","파란 하늘을 올려다봐!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_sky.mp3"],["sea","[명] 바다","Let’s go swimming in the sea!","바다에 수영하러 가자!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_sea.mp3"],["line","[명] 선, 줄","Draw a line on the page.","그 페이지에 선을 그려라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_line.mp3"],["face","[명] 얼굴","Wash your face.","네 얼굴을 씻어라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_face.mp3"],["facial","[형] 얼굴의","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20230214/509ee77f6b418321a66bfd21b64eaac4.mp3"],["travel","[동] (먼 곳으로) 여행하다","[명] (긴) 여행 We will travel around the world.","우리는 전 세계를 여행할 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_travel.mp3"],["stop","[동] 멈추다","[명] 멈춤 Don’t stop the music!","음악을 멈추지 마!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_stop.mp3"],["wait","[동] 기다리다","Please wait in line.","줄 서서 기다리세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_wait.mp3"],["all","[형] 모든","[대] 모두 He ate all the bread.","그가 모든 빵을 먹었다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_all.mp3"],["fine","[형] 1. 좋은 2. 건강한","I feel fine this morning.","오늘 아침 기분이 좋다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_fine.mp3"],["energy","[명] 1. 에너지 2. 기운","We can get energy from the sun.","우리는 태양으로부터 에너지를 얻을 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_energy.mp3"],["problem","[명] 문제","I have a problem with my phone.","내 전화기에 문제가 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY26_problem.mp3"]]},{"d":"27","p":[155,160],"w":[["jacket","[명] 재킷, 겉옷","How much is this jacket?","이 재킷은 얼마인가요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_jacket.mp3"],["monkey","[명] 원숭이","A monkey is jumping on the bed.","원숭이 한 마리가 침대에서 뛰고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_monkey.mp3"],["space","[명] 공간","We should make space for a table.","우리는 탁자를 놓을 공간을 만들어야 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_space.mp3"],["warm","[형] 따뜻한","Drink warm water.","따뜻한 물을 마셔라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_warm.mp3"],["town","[명] 마을, (소)도시","He lives in a small town.","그는 작은 마을에 살고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_town.mp3"],["with","[전] 1. ~와 함께 2. ~을 사용하여","I like to travel with my family.","나는 가족과 함께 여행하는 것을 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_with.mp3"],["buy","[동] 사다","I will buy some bread.","나는 빵을 약간 살 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_buy.mp3"],["start","[동] 시작하다","Let’s start the game now.","지금 게임을 시작하자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_start.mp3"],["wear","[동] 입고[신고, 쓰고] 있다","You should wear a warm jacket today.","너는 오늘 따뜻한 재킷을 입어야 해.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_wear.mp3"],["first","[형] 첫 (번)째의","[부] 우선, 먼저 He’s first in line.","그는 줄에서 첫 번째에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_first.mp3"],["choose","[동] 선택하다, 고르다","Please choose a color.","색깔을 하나 선택해 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_choose.mp3"],["vegetable","[명] 야채, 채소","The vegetable soup is ready.","야채수프가 준비되었습니다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY27_vegetable.mp3"]]},{"d":"28","p":[161,166],"w":[["horse","[명] 말","The horse is eating vegetables.","그 말은 야채를 먹고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_horse.mp3"],["number","[명] 숫자, 번호","I will choose the number five.","나는 숫자 5를 고를게.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_number.mp3"],["bank","[명] 은행","How can I get to the bank?","은행에 어떻게 갈 수 있나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_bank.mp3"],["mouse","[명] 쥐, 생쥐","The mouse is very small.","그 쥐는 아주 작다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_mouse.mp3"],["picnic","[명] 소풍, 피크닉","Let’s go on a picnic tomorrow.","내일 소풍 가자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_picnic.mp3"],["grow","[동] 자라다","Apples grow on trees.","사과는 나무에서 자란다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_grow.mp3"],["growth","[명] 성장","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221017/5ff58d62c15f28a3f16d0bbe332a1439.mp3"],["farm","[명] 농장","There are horses on the farm.","농장에 말들이 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_farm.mp3"],["farmer","[명] 농부","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221029/97f974881b3726d9a77014b5f3b4d795.mp3"],["show","[동] 보여 주다","Please show me your notebook.","너의 공책을 내게 보여 줘.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_show.mp3"],["twice","[부] 두 번, 2회","He visited the farm twice this week.","그는 이번 주에 농장을 두 번 방문했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_twice.mp3"],["front","[명] 앞쪽","[형] 앞쪽의 Look at the front of the book.","그 책의 앞쪽을 보세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_front.mp3"],["restroom","[명] (공공장소의) 화장실","Where is the restroom?","화장실이 어디에 있나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_restroom.mp3"],["understand","[동] 이해하다","I understand French.","나는 프랑스어를 이해한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY28_understand.mp3"]]},{"d":"29","p":[167,172],"w":[["zoo","[명] 동물원","We can see many animals at the zoo.","우리는 동물원에서 많은 동물들을 볼 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_zoo.mp3"],["vase","[명] 꽃병","Put the roses in a vase.","그 장미들을 꽃병에 넣으세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_vase.mp3"],["market","[명] 시장","What will you buy at the market?","너는 시장에서 무엇을 살 거니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_market.mp3"],["last","[형] 마지막의","[부] 최후에 Today is the last day of May.","오늘은 5월의 마지막 날이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_last.mp3"],["winter","[명] 겨울","We go skiing in winter.","우리는 겨울에 스키를 타러 간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_winter.mp3"],["miss","[동] 놓치다","Don’t miss the bus!","그 버스를 놓치지 마!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_miss.mp3"],["tennis","[명] 테니스","I missed the tennis ball.","내가 그 테니스공을 놓쳤다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_tennis.mp3"],["kick","[동] (발로) 차다","She kicked a can.","그녀는 깡통을 발로 찼다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_kick.mp3"],["fast","[형] 빠른","[부] 빠르게 He is a fast runner.","그는 빠른 달리기 선수이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_fast.mp3"],["free","[형] 자유로운","What do you do in your free time?","너는 자유 시간에 무엇을 하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_free.mp3"],["always","[부] 항상","I always play tennis in my free time.","나는 자유 시간에 항상 테니스를 친다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_always.mp3"],["answer","[동] 대답하다","[명] 대답 Please answer my question.","제 질문에 대답해 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY29_answer.mp3"]]},{"d":"31","p":[177,182],"w":[["elephant","[명] 코끼리","Elephants have long noses.","코끼리들은 긴 코를 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_elephant.mp3"],["doll","[명] 인형","My sister plays with her dolls.","내 여동생은 그녀의 인형을 가지고 논다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_doll.mp3"],["act","[동] 행동하다","[명] 행동, 행위 Act your age!","나이에 맞게 행동해!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_act.mp3"],["tell","[동] 말하다","Tell me your answer.","내게 네 대답을 말해 줘.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_tell.mp3"],["coat","[명] 외투, 코트","I wear a warm coat in winter.","나는 겨울에 따뜻한 외투를 입는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_coat.mp3"],["build","[동] (건물을) 짓다","We will build a house with wood.","우리는 나무로 집을 지을 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_build.mp3"],["bake","[동] (빵ㆍ과자 등을) 굽다","I can bake cookies alone.","나는 혼자서 쿠키를 구울 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_bake.mp3"],["baker","[명] 제빵사","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221029/623466d63908ff643b88d946e2f2fbd6.mp3"],["fruit","[명] 과일, 열매","You should eat fruit every day.","너는 과일을 매일 먹어야 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_fruit.mp3"],["sell","[동] 팔다","The market sells fresh fruit.","그 시장은 신선한 과일을 판다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_sell.mp3"],["full","[형] 가득한","The box is full of toys.","그 상자는 장난감들로 가득하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_full.mp3"],["difficult","[형] 어려운","This book is difficult for me.","이 책은 나에게 어렵다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_difficult.mp3"],["company","[명] 회사","My dad works at a food company.","우리 아빠는 식품 회사에서 일하셔.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY31_company.mp3"]]},{"d":"32","p":[183,188],"w":[["rabbit","[명] 토끼","Rabbits have long ears.","토끼는 긴 귀를 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_rabbit.mp3"],["carrot","[명] 당근","A rabbit likes eating carrots.","토끼는 당근 먹는 것을 좋아한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_carrot.mp3"],["hand","[명] 손","I write with my left hand.","나는 왼손으로 글을 쓴다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_hand.mp3"],["clean","[형] 깨끗한","Are your hands clean?","너의 손은 깨끗하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_clean.mp3"],["floor","[명] (실내의) 바닥","The floor is clean.","바닥이 깨끗하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_floor.mp3"],["pick","[동] 고르다","Please pick a card.","카드를 한 장 골라주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_pick.mp3"],["catch","[동] (붙)잡다","Who can catch a ball?","누가 공을 잡을 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_catch.mp3"],["feel","[동] 느끼다","She feels happy at the zoo.","그녀는 동물원에서 행복하다고 느낀다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_feel.mp3"],["little","[형] 작은","A little bird is singing in the tree.","작은 새가 나무에서 노래하고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_little.mp3"],["flower","[명] 꽃","I will buy some flowers.","나는 꽃을 약간 살 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_flower.mp3"],["break","[동] 깨다, 부수다","Did you break the vase?","네가 그 꽃병을 깼니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_break.mp3"],["danger","[명] 위험","There is a danger of fire.","화재의 위험이 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY32_danger.mp3"],["dangerous","[형] 위험한","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20231201/0a8113941d35466c79218e83175665ef.mp3"]]},{"d":"33","p":[189,194],"w":[["hit","[동] 치다, 때리다","The baseball player hit the ball.","그 야구 선수가 공을 쳤다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_hit.mp3"],["leg","[명] 다리","How did you break your leg?","너는 어떻게 하다가 다리가 부러졌어?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_leg.mp3"],["city","[명] (대)도시","London is a big city.","런던은 큰 도시이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_city.mp3"],["late","[형] 늦은","[부] 늦게 She is late for class today.","그녀는 오늘 수업에 늦었다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_late.mp3"],["later","[부] 나중에","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221018/c18788c2f274c779da72d9854ea4bfbf.mp3"],["center","[명] 중앙, 중심","Look at the center of the map.","그 지도의 중앙을 봐라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_center.mp3"],["spring","[명] 봄","It is hot in late spring.","늦은 봄에는 덥다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_spring.mp3"],["call","[동] 전화하다","[명] 전화 I’ll call you later.","내가 나중에 네게 전화할게.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_call.mp3"],["tall","[형] 키가 큰, 높은","My father is tall.","우리 아빠는 키가 크다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_tall.mp3"],["carry","[동] 나르다","I can carry this box.","나는 이 상자를 나를 수 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_carry.mp3"],["finish","[동] 끝내다","Did you finish your homework?","너는 네 숙제를 끝냈니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_finish.mp3"],["country","[명] 나라, 국가","Korea is a great country.","한국은 멋진 국가이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_country.mp3"],["example","[명] 예, 예시","A banana is an example of a fruit.","바나나는 과일의 한 가지 예이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY33_example.mp3"]]},{"d":"34","p":[195,200],"w":[["ring","[명] 반지","She has a ring on her left hand.","그녀는 왼손에 반지를 끼고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_ring.mp3"],["win","[동] 이기다","[명] 승리 Our team will win the game.","우리 팀이 그 게임을 이길 것이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_win.mp3"],["skirt","[명] 치마","She is wearing a black skirt.","그녀는 검정색 치마를 입고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_skirt.mp3"],["move","[동] 움직이다, 옮기다","Move your hands to the music.","음악에 맞춰 너의 손을 움직여봐.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_move.mp3"],["garden","[명] 정원","The garden is full of flowers.","그 정원은 꽃들로 가득하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_garden.mp3"],["tired","[형] 피곤한","I’m so tired today.","나는 오늘 매우 피곤하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_tired.mp3"],["need","[동] 필요하다","I need some water.","나는 물이 좀 필요하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_need.mp3"],["fix","[동] 고치다","Can you fix my bike?","당신은 제 자전거를 고칠 수 있나요?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_fix.mp3"],["right","[형] 정확한, 옳은","That is the right answer.","그것은 정답이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_right.mp3"],["hope","[동] 바라다","[명] 희망 I hope to see you there.","나는 너를 거기서 보기를 바라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_hope.mp3"],["climb","[동] 오르다","Let’s climb that tall tree.","저 큰 나무에 올라가자.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_climb.mp3"],["office","[명] 사무실","His office is very clean.","그의 사무실은 매우 깨끗하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY34_office.mp3"]]},{"d":"36","p":[205,210],"w":[["girl","[명] 여자아이, 소녀","Who is that girl in the garden?","정원에 있는 저 여자아이는 누구니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_girl.mp3"],["sock","[명] 양말","Whose sock is this?","이것은 누구의 양말이니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_sock.mp3"],["upset","[형] 속상한, 화난","The girl was upset about the test.","그 소녀는 시험 때문에 속상했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_upset.mp3"],["mother","[명] 어머니, 엄마","What does your mother do?","너의 어머니는 무슨 일을 하시니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_mother.mp3"],["teach","[동] 가르치다","My mother teaches English.","우리 어머니는 영어를 가르치셔.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_teach.mp3"],["teacher","[명] 선생님","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20240325/8d788385431273d11e8b43bb78f3aa41.mp3"],["foot","[명] 발","Kick the ball with your left foot.","왼쪽 발로 그 공을 차라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_foot.mp3"],["think","[동] 생각하다","What do you think about the story?","그 이야기에 대해 너는 어떻게 생각하니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_think.mp3"],["give","[동] 주다","She always gives me a present.","그녀는 항상 나에게 선물을 준다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_give.mp3"],["after","[전] ~후에","After dinner, I do my homework.","저녁 식사 후에, 나는 숙제를 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_after.mp3"],["wrong","[형] 잘못된, 틀린","What’s wrong with your foot?","너의 발에 뭐가 잘못됐어?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_wrong.mp3"],["honest","[형] 정직한, 솔직한","He is an honest boy.","그는 정직한 소년이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_honest.mp3"],["honesty","[명] 정직","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20221116/652b607a73004cc81e3ccee5353bceb4.mp3"],["project","[명] 프로젝트","What is your class project?","너의 학급 프로젝트는 무엇이니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY36_project.mp3"]]},{"d":"37","p":[211,216],"w":[["door","[명] 문","All the doors are open.","모든 문이 열려 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_door.mp3"],["cut","[동] 자르다","Can you cut the cake for us?","우리를 위해 그 케이크를 잘라 줄 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_cut.mp3"],["window","[명] 창문","Close the window, please.","창문을 닫아 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_window.mp3"],["rain","[명] 비","[동] 비가 오다 We are playing in the rain.","우리는 빗속에서 놀고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_rain.mp3"],["rainy","[형] 비가 오는","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20231201/45793d862ee49ff7759cf6c5e35ab7cb.mp3"],["keep","[동] 유지하다","You should keep your room clean.","너는 네 방을 깨끗하게 유지해야 한다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_keep.mp3"],["mind","[명] 마음, 정신","Yoga is good for the mind and body.","요가는 마음과 몸에 좋다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_mind.mp3"],["letter","[명] 편지","I’m writing a letter to a friend.","나는 친구에게 편지를 쓰고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_letter.mp3"],["kind","[형] 친절한","You are so kind.","당신은 매우 친절하세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_kind.mp3"],["ask","[동] 묻다","Ask your teacher about the project!","그 프로젝트에 대해 너의 선생님께 여쭤봐!","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_ask.mp3"],["strawberry","[명] 딸기","Strawberries are in season now.","딸기는 지금 제철이다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_strawberry.mp3"],["question","[명] 질문","Can I ask you a question?","내가 네게 질문 하나 해도 될까?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_question.mp3"],["believe","[동] 믿다","I believe your story.","나는 너의 이야기를 믿는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY37_believe.mp3"]]},{"d":"38","p":[217,222],"w":[["wet","[형] 젖은","I am wet from the rain.","나는 비에 젖었다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_wet.mp3"],["rich","[형] 부유한, 돈 많은","That rich man has many cars.","저 부유한 남자는 차를 많이 가지고 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_rich.mp3"],["queen","[명] 여왕","The queen is rich and kind.","그 여왕은 부유하고 친절하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_queen.mp3"],["wind","[명] 바람","The wind is cold today.","오늘은 바람이 차갑다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_wind.mp3"],["windy","[형] 바람이 부는","","","https://mobile3.classcard.net/uploads2/audio/u/az/en/20240617/22a57394810fd219eb7bbd163021c270.mp3"],["bill","[명] 계산서, 청구서","Here is your bill.","여기 당신의 계산서입니다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_bill.mp3"],["return","[동] 돌아오다","These birds return every spring.","이 새들은 봄마다 돌아온다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_return.mp3"],["land","[명] 땅, 육지","The land is very dry.","그 땅은 매우 건조하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_land.mp3"],["way","[명] 길, 도로","I know the way to the bank.","나는 그 은행으로 가는 길을 안다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_way.mp3"],["pass","[동] 1. 지나가다 2. 건네주다","She passes a park on the way home.","그녀는 집으로 가는 길에 공원을 지나간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_pass.mp3"],["back","[부] 뒤로","[명] 뒤쪽 [형] 뒤쪽의 He stopped and looked back.","그는 멈춰서 뒤로 돌아보았다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_back.mp3"],["mountain","[명] 산","I go to the mountains every weekend.","나는 주말마다 산에 간다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_mountain.mp3"],["business","[명] 사업","He started a small business.","그는 작은 사업을 시작했다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY38_business.mp3"]]},{"d":"39","p":[223,228],"w":[["fat","[형] 뚱뚱한","That fat cat eats a lot.","저 뚱뚱한 고양이는 많이 먹는다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_fat.mp3"],["top","[명] 맨 위, 꼭대기","He is at the top of the mountain.","그는 산꼭대기에 있다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_top.mp3"],["before","[전] ~전에","Wash your hands before lunch.","점심 식사 전에 손을 씻어라.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_before.mp3"],["guitar","[명] 기타","Can you play the guitar?","너는 기타를 칠 수 있니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_guitar.mp3"],["hard","[형] 딱딱한, 단단한","The bread is hard.","그 빵은 딱딱하다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_hard.mp3"],["hold","[동] 잡다, 들다","Please hold my hand.","제 손을 잡아 주세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_hold.mp3"],["lie","[동] 눕다","Don’t lie on the floor.","바닥에 눕지 마세요.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_lie.mp3"],["knee","[명] 무릎","He put his hand on his knee.","그의 손을 자신의 무릎 위에 두었다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_knee.mp3"],["high","[형] 높은","[부] 높이 The mountain is very high.","그 산은 아주 높다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_high.mp3"],["store","[명] 가게, 상점","What do they sell at the store?","그 가게에서는 무엇을 파니?","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_store.mp3"],["condition","[명] 상태","This old guitar is in good condition.","이 오래된 기타는 상태가 좋다.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_condition.mp3"],["introduce","[동] 소개하다","Let me introduce my friend.","내 친구를 소개할게.","https://mobile3.classcard.net/uploads/audio/u/ne/en/nevoca25/NEVOCA_E1_DAY39_introduce.mp3"]]}]};
+
+/* ---------- helpers ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const pad = n=>String(n).padStart(2,'0');
+const esc = s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle = a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd = n=>Math.floor(Math.random()*n);
+
+/* ---------- data model ---------- */
+const DAYS = DATA.days.map(d=>({id:d.d,p:d.p,words:d.w.map(w=>({w:w[0],pm:w[1],ex:w[2],exko:w[3],au:w[4]}))}));
+const ALL = [];
+DAYS.forEach(d=>d.words.forEach(w=>{w.day=d.id;ALL.push(w);}));
+const BY_WORD = {};
+ALL.forEach(w=>{BY_WORD[w.w.toLowerCase()]=w;});
+const ALL_MEANINGS = ALL.map(w=>meanOf(w));
+const REVIEW_MAP = {'05':['01','02','03','04'],'10':['06','07','08','09'],'15':['11','12','13','14'],'20':['16','17','18','19'],'25':['21','22','23','24'],'30':['26','27','28','29'],'35':['31','32','33','34'],'40':['36','37','38','39']};
+const REVIEW_DAYS = Object.keys(REVIEW_MAP).sort();
+const DAY_OBJ = {}; DAYS.forEach(d=>DAY_OBJ[d.id]=d);
+
+function meanOf(w){ return w.pm.replace(/^\[[^\]]*\]\s*/,'').trim(); }
+function posOf(w){ return ''; }
+function posTag(w){ const m=w.pm.match(/^\[([^\]]*)\]/); return m?('['+m[1]+']'):''; }
+function dayWords(id){
+  if(DAY_OBJ[id]) return DAY_OBJ[id].words;
+  const pool=[],seen=new Set();
+  (REVIEW_MAP[id]||[]).forEach(d=>{ (DAY_OBJ[d]?DAY_OBJ[d].words:[]).forEach(w=>{ if(!seen.has(w.w)){seen.add(w.w);pool.push(w);} }); });
+  return pool;
+}
+function dayLabel(id){ return 'DAY '+id + (REVIEW_MAP[id]?' 복습':''); }
+function dayPages(id){
+  if(DAY_OBJ[id]) return DAY_OBJ[id].p;
+  const r=REVIEW_MAP[id], first=r[0], last=r[r.length-1];
+  return [DAY_OBJ[first].p[0], DAY_OBJ[last].p[1]+2];
+}
+const ALL_DAYS = DAYS.map(d=>d.id).concat(REVIEW_DAYS).sort();
+
+/* ---------- state ---------- */
+const KEY='danny_voca_v1';
+const DEFAULT={known:{},unclear:{},wrongs:{},seen:{},quiz:{},spell:{},settings:{autoSpeak:true,slow:false,mp3:true}};
+let state = load();
+function load(){
+  try{ const raw=localStorage.getItem(KEY); if(!raw) return JSON.parse(JSON.stringify(DEFAULT));
+    const s=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(raw));
+    s.settings=Object.assign({autoSpeak:true,slow:false,mp3:true},s.settings||{});
+    ['known','unclear','wrongs','seen','quiz','spell'].forEach(k=>s[k]=s[k]||{});
+    return s;
+  }catch(e){ return JSON.parse(JSON.stringify(DEFAULT)); }
+}
+let saveTimer=null;
+function save(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} },120); }
+function saveNow(){ clearTimeout(saveTimer); try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} }
+
+/* ---------- audio ---------- */
+const audioEl = new Audio(); audioEl.preload='none';
+let voice=null;
+function pickVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  const vs=speechSynthesis.getVoices().filter(v=>/^en(-|_)?(US|GB)?/i.test(v.lang)||/english/i.test(v.name));
+  if(!vs.length) return null;
+  const pref=['Samantha','Alex','Ava','Allison','Google US English','Karen','Daniel','Microsoft Aria','Microsoft Zira'];
+  for(const p of pref){ const f=vs.find(v=>v.name.includes(p)); if(f) return f; }
+  return vs.find(v=>v.lang==='en-US')||vs[0];
+}
+if('speechSynthesis' in window){
+  pickVoice(); speechSynthesis.onvoiceschanged=()=>{voice=pickVoice();};
+}
+function speak(text,slow){
+  if(!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=slow?0.65:0.9; u.pitch=1; u.volume=1;
+    if(voice) u.voice=voice;
+    setTimeout(()=>speechSynthesis.speak(u),40);
+  }catch(e){}
+}
+function playWord(w,slow){
+  if(!w) return;
+  const useMp3 = state.settings.mp3 && w.au;
+  if(useMp3){
+    try{
+      audioEl.pause();
+      audioEl.src=w.au;
+      audioEl.playbackRate = slow?0.7:1;
+      audioEl.preservesPitch = true;
+      const p=audioEl.play();
+      if(p && p.catch) p.catch(()=>speak(w.w,slow));
+      audioEl.onerror=()=>speak(w.w,slow);
+      return;
+    }catch(e){}
+  }
+  speak(w.w,slow);
+}
+
+/* ---------- navigation ---------- */
+const SCREENS=['home','day','cards','quiz','spell','wrong','settings'];
+const TITLES={home:['단영의 능률보카','능률VOCA 초등 기본 · 400단어'],wrong:['오답노트','틀린 단어만 모아서 복습'],settings:['설정','발음·학습 기록']};
+let curScreen='home';
+function go(scr){
+  curScreen=scr;
+  SCREENS.forEach(s=>$('#scr-'+s).classList.toggle('active',s===scr));
+  const t=TITLES[scr];
+  if(t){ $('#scrTitle').textContent=t[0]; $('#scrSub').textContent=t[1]; }
+  $$('.tabbar .tab').forEach(b=>b.classList.toggle('on',b.dataset.scr===scr));
+  window.scrollTo(0,0);
+  if(scr==='home') renderHome();
+  if(scr==='wrong') renderWrong();
+  if(scr==='settings') renderSettings();
+}
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1700);
+}
+
+/* ---------- stats ---------- */
+function dayStats(id){
+  const words=dayWords(id);
+  const known=words.filter(w=>state.known[w.w]).length;
+  const seen=words.filter(w=>state.seen[w.w]).length;
+  const q=state.quiz[id]||{r:0,t:0}, s=state.spell[id]||{r:0,t:0};
+  const stars=[words.length>0&&seen>=words.length, q.t>0&&q.r/q.t>=0.8, s.t>0&&s.r/s.t>=0.8];
+  return {total:words.length,known,seen,pct:words.length?Math.round(known/words.length*100):0,q,s,stars:stars.filter(Boolean).length,starArr:stars};
+}
+function overall(){
+  const known=Object.keys(state.known).filter(k=>BY_WORD[k]).length;
+  return {known,total:ALL.length,pct:Math.round(known/ALL.length*100)};
+}
+function wrongKeys(){ return Object.keys(state.wrongs).filter(k=>BY_WORD[k]); }
+
+/* ---------- home ---------- */
+let filter='all';
+function renderHome(){
+  const o=overall();
+  $('#homeKnown').innerHTML=o.known+' <small>/ '+o.total+' 단어 외웠어요</small>';
+  $('#homeBar').style.width=o.pct+'%';
+  const wc=wrongKeys().length;
+  $('#homeWrongCnt').textContent=wc;
+  const doneDays=ALL_DAYS.filter(id=>dayStats(id).stars===3).length;
+  $('#homeDayStat').textContent='도장 '+doneDays+' / '+ALL_DAYS.length+' DAY';
+  const grid=$('#dayGrid'); grid.innerHTML='';
+  let shown=0;
+  ALL_DAYS.forEach(id=>{
+    const st=dayStats(id), review=!!REVIEW_MAP[id];
+    if(filter==='word'&&review) return;
+    if(filter==='review'&&!review) return;
+    if(filter==='todo'&&(st.seen>0||st.known>0)) return;
+    if(filter==='star'&&st.stars<3) return;
+    shown++;
+    const p=dayPages(id);
+    const el=document.createElement('button');
+    el.className='daycard'+(review?' review':'')+(st.stars===3?' done':'');
+    el.dataset.day=id;
+    const stars='<b>★</b>'.repeat(st.stars)+'☆'.repeat(3-st.stars);
+    const hw=(id==='22'||id==='23')?'<span class="badge">숙제</span>':'';
+    el.innerHTML=hw+
+      '<div class="dn">'+(review?'복습 '+id:'DAY '+id)+'</div>'+
+      '<div class="dm">'+st.total+'단어 · p.'+p[0]+'~'+p[1]+'</div>'+
+      '<div class="stars">'+stars+'</div>'+
+      '<div class="mini-bar"><i style="width:'+st.pct+'%"></i></div>'+
+      (st.stars===3?'<span class="stamp">🎖️</span>':'');
+    el.onclick=()=>openDay(id);
+    grid.appendChild(el);
+  });
+  if(!shown) grid.innerHTML='<div class="empty"><span class="em">🌤️</span>해당하는 DAY가 없어요.</div>';
+}
+
+/* ---------- day ---------- */
+let curDay='01';
+function openDay(id){
+  curDay=id;
+  const st=dayStats(id), p=dayPages(id), review=!!REVIEW_MAP[id];
+  $('#scrTitle').textContent=dayLabel(id);
+  $('#scrSub').textContent='교재 p.'+p[0]+'~'+p[1]+' · '+st.total+'단어';
+  $('#dayTitle').textContent=review?('복습 DAY '+id):('DAY '+id);
+  $('#dayMeta').innerHTML=(review?'DAY '+REVIEW_MAP[id].join('·')+' 단어 복습 · ':'')+'교재 p.'+p[0]+'~'+p[1]+' · '+st.total+'단어'+
+    (id==='22'||id==='23'?' <span class="pill" style="font-size:11.5px;padding:3px 9px">📌 숙제 p.130~135</span>':'');
+  $('#dayStars').innerHTML='<b>★</b>'.repeat(st.stars)+'☆'.repeat(3-st.stars);
+  $('#dayPct').innerHTML=st.pct+'<small>%</small>';
+  $('#dayBar').style.width=st.pct+'%';
+  const list=$('#dayWords'); list.innerHTML='';
+  dayWords(id).forEach(w=>{
+    const b=document.createElement('button');
+    b.className='wordpill'+(state.known[w.w]?' known':'')+(state.unclear[w.w]?' unclear':'');
+    b.innerHTML='<div><div class="w">'+esc(w.w)+'</div><div class="m">'+esc(w.pm)+'</div></div><div class="sp">🔊</div>';
+    b.onclick=()=>{ playWord(w,state.settings.slow); };
+    list.appendChild(b);
+  });
+  $$('.screen').forEach(s=>s.classList.remove('active'));
+  $('#scr-day').classList.add('active');
+  curScreen='day';
+  $$('.tabbar .tab').forEach(b=>b.classList.remove('on'));
+  window.scrollTo(0,0);
+}
+$('#dayBtnCards').onclick=()=>startCards(dayWords(curDay),curDay,'day');
+$('#dayBtnQuiz').onclick=()=>startQuiz(dayWords(curDay),curDay,'day');
+$('#dayBtnSpell').onclick=()=>startSpell(dayWords(curDay),curDay,'day');
+
+/* ---------- flashcards ---------- */
+let cardList=[],cardIdx=0,cardCtx='day',cardDay='01';
+function startCards(words,day,ctx){
+  cardList=words.slice(); cardIdx=0; cardCtx=ctx; cardDay=day;
+  $('#scrTitle').textContent=ctx==='wrong'?'오답 카드':dayLabel(day)+' 카드';
+  $('#scrSub').textContent=cardList.length+'단어';
+  showCard();
+  goNoRender('cards');
+}
+function goNoRender(scr){
+  SCREENS.forEach(s=>$('#scr-'+s).classList.toggle('active',s===scr));
+  curScreen=scr;
+  $$('.tabbar .tab').forEach(b=>b.classList.remove('on'));
+  window.scrollTo(0,0);
+}
+function showCard(){
+  const w=cardList[cardIdx]; if(!w) return;
+  const fc=$('#flipcard'); fc.classList.remove('flipped');
+  $('#cardWord').textContent=w.w;
+  $('#cardPos').textContent=posTag(w);
+  $('#cardMean').textContent=meanOf(w);
+  $('#cardEx').textContent=w.ex||'';
+  $('#cardExKo').textContent=w.exko||'';
+  const img=$('#cardImg');
+  if(w.au && w.au.includes('/audio/u/ne/')){
+    img.style.display=''; img.src=w.au.replace('/audio/','/wordimg/').replace('.mp3','.jpg');
+    img.onerror=()=>{img.style.display='none';};
+  }else{ img.style.display='none'; img.removeAttribute('src'); }
+  $('#cardCounter').textContent=(cardIdx+1)+' / '+cardList.length;
+  const dots=$('#cardDots'); dots.innerHTML='';
+  cardList.forEach((x,i)=>{
+    const d=document.createElement('i');
+    if(i===cardIdx) d.className='on';
+    else if(state.unclear[x.w]) d.className='unclear';
+    else if(state.known[x.w]) d.className='known';
+    dots.appendChild(d);
+  });
+  const jump=$('#cardJump');
+  if(jump && cardList.length){
+    jump.innerHTML='';
+    cardList.forEach((x,i)=>{
+      const b=document.createElement('button');
+      b.textContent=x.w;
+      b.style.cssText='font-size:12.5px;padding:6px 10px;border-radius:10px;background:'+
+        (i===cardIdx?'#FFD84D':state.known[x.w]?'#E4F8EC':state.unclear[x.w]?'#FFE7E4':'#F7F1E1')+';font-weight:700';
+      b.onclick=()=>{ cardIdx=i; showCard(); };
+      jump.appendChild(b);
+    });
+  }
+  state.seen[w.w]=1; save();
+  $('#markKnown').style.opacity=state.known[w.w]?1:.9;
+  $('#markUnclear').style.opacity=state.unclear[w.w]?1:.9;
+}
+$('#flipcard').onclick=()=>$('#flipcard').classList.toggle('flipped');
+$('#cardSpeak').onclick=e=>{e.stopPropagation();playWord(cardList[cardIdx],false);};
+$('#cardSlow').onclick=e=>{e.stopPropagation();playWord(cardList[cardIdx],true);};
+$('#cardExSpeak').onclick=e=>{e.stopPropagation();const w=cardList[cardIdx];if(w&&w.ex)speak(w.ex,false);};
+$('#cardPrev').onclick=()=>{ if(cardIdx>0){cardIdx--;showCard();} };
+$('#cardNext').onclick=()=>{ if(cardIdx<cardList.length-1){cardIdx++;showCard();} else toast('이 DAY 카드를 다 봤어요! 👏'); };
+$('#markKnown').onclick=()=>{
+  const w=cardList[cardIdx];
+  state.known[w.w]=1; delete state.unclear[w.w]; delete state.wrongs[w.w];
+  save(); showCard(); toast('잘했어요! ⭐');
+  const at=cardIdx;
+  if(at<cardList.length-1){ setTimeout(()=>{ if(cardIdx===at){cardIdx++;showCard();} },280); }
+  else { saveNow(); }
+  checkStamp(cardDay);
+};
+$('#markUnclear').onclick=()=>{
+  const w=cardList[cardIdx];
+  delete state.known[w.w]; state.unclear[w.w]=1; addWrong(w,'card');
+  save(); showCard(); toast('오답노트에 담았어요 🤔');
+  const at=cardIdx;
+  if(at<cardList.length-1){ setTimeout(()=>{ if(cardIdx===at){cardIdx++;showCard();} },280); }
+};
+$('#cardToQuiz').onclick=()=>startQuiz(cardList,cardDay,cardCtx);
+document.addEventListener('keydown',e=>{
+  if(curScreen!=='cards') return;
+  if(e.key==='ArrowRight'){ $('#cardNext').click(); }
+  if(e.key==='ArrowLeft'){ $('#cardPrev').click(); }
+  if(e.key===' '){ e.preventDefault(); playWord(cardList[cardIdx],false); }
+});
+
+function checkStamp(dayId){
+  if(!dayId||dayId==='-'||!DAY_OBJ[dayId]) return;
+  const st=dayStats(dayId);
+  const key='stamp_'+dayId;
+  if(st.stars===3 && !state[key]){ state[key]=1; saveNow(); toast('🎖️ '+dayLabel(dayId)+' 도장 획득!'); }
+}
+function addWrong(w,src){
+  const cur=state.wrongs[w.w]||{n:0,src:src,at:Date.now(),day:w.day};
+  cur.n=(cur.n||0)+1; cur.at=Date.now(); cur.src=src; cur.day=w.day;
+  state.wrongs[w.w]=cur; save();
+}
+function clearWrong(w){ if(state.wrongs[w.w]){ delete state.wrongs[w.w]; save(); } }
+
+/* ---------- quiz ---------- */
+let quizList=[],quizIdx=0,quizRight=0,quizCtx='day',quizDay='01',quizAnswered=false;
+function buildOptions(w){
+  const correct=meanOf(w);
+  const pool=shuffle(ALL_MEANINGS.filter(m=>m!==correct));
+  const opts=[correct];
+  for(const m of pool){ if(opts.length>=4) break; if(!opts.includes(m)) opts.push(m); }
+  return shuffle(opts);
+}
+function startQuiz(words,day,ctx){
+  quizList=shuffle(words); quizIdx=0; quizRight=0; quizCtx=ctx; quizDay=day;
+  $('#quizResult').style.display='none'; $('#quizBody').style.display='';
+  $('#scrTitle').textContent=ctx==='wrong'?'오답 퀴즈':dayLabel(day)+' 퀴즈';
+  $('#scrSub').textContent=quizList.length+'문제';
+  renderQuiz(); goNoRender('quiz');
+}
+function renderQuiz(){
+  if(quizIdx>=quizList.length){ return endQuiz(); }
+  const w=quizList[quizIdx]; quizAnswered=false;
+  $('#quizWord').textContent=w.w; $('#quizWord').dataset.real=w.w; applyEyes();
+  $('#quizSub').textContent=(posTag(w)?posTag(w)+' · ':'')+'알맞은 뜻을 골라 보세요';
+  $('#quizScore').textContent=quizRight+' / '+quizList.length;
+  $('#quizBar').style.width=Math.round(quizIdx/quizList.length*100)+'%';
+  $('#quizFeedback').textContent=''; $('#quizFeedback').className='feedback';
+  $('#quizNext').style.display='none';
+  const box=$('#quizOptions'); box.innerHTML='';
+  buildOptions(w).forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.dataset.mean=m;
+    b.innerHTML='<span class="num">'+'ABCD'[i]+'</span><span>'+esc(m)+'</span>';
+    b.onclick=()=>answerQuiz(b,m,w);
+    box.appendChild(b);
+  });
+  if(state.settings.autoSpeak){ playWord(w,false); }
+  state.seen[w.w]=1; save();
+}
+function answerQuiz(btn,mean,w){
+  if(quizAnswered) return; quizAnswered=true;
+  const correct=meanOf(w);
+  $$('#quizOptions .opt').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.mean===correct) b.classList.add('right');
+    else if(b===btn) b.classList.add('wrong');
+  });
+  const fb=$('#quizFeedback');
+  if(mean===correct){
+    quizRight++; clearWrong(w); fb.textContent='정답! 🎉'; fb.className='feedback good';
+    speak('Great job',false);
+  }else{
+    addWrong(w,'quiz'); fb.innerHTML='아쉬워요! 정답은 <b>'+esc(correct)+'</b>'; fb.className='feedback bad';
+    playWord(w,true);
+  }
+  const q=state.quiz[quizDay]||{r:0,t:0}; q.t++; if(mean===correct)q.r++; state.quiz[quizDay]=q; save();
+  $('#quizScore').textContent=quizRight+' / '+quizList.length;
+  $('#quizNext').style.display='';
+  $('#quizNext').onclick=()=>{ quizIdx++; renderQuiz(); };
+  setTimeout(()=>{ if(quizAnswered && $('#quizNext').style.display!=='none' && curScreen==='quiz'){ quizIdx++; renderQuiz(); } }, mean===correct?900:2100);
+}
+function endQuiz(){
+  $('#quizBar').style.width='100%';
+  $('#quizBody').style.display='none';
+  const st=dayStats(quizDay);
+  const pct=quizList.length?Math.round(quizRight/quizList.length*100):0;
+  const em=pct>=90?'🏆':pct>=70?'🎉':'💪';
+  const msg=pct>=90?'완벽해요!':pct>=70?'잘했어요!':'조금 더 연습해 봐요!';
+  $('#quizResult').style.display='';
+  $('#quizResult').innerHTML='<div class="result"><span class="em">'+em+'</span>'+
+    '<div class="score">'+quizRight+'<small> / '+quizList.length+'</small></div>'+
+    '<div class="msg">'+msg+' ('+pct+'%)</div>'+
+    '<div class="btn-row" style="justify-content:center;margin-top:18px">'+
+      '<button class="btn primary" id="quizAgain">한 번 더</button>'+
+      '<button class="btn sky" id="quizToSpell">받아쓰기 하기</button>'+
+      (wrongKeys().length?'<button class="btn coral" id="quizToWrong">오답노트 보기</button>':'')+
+    '</div></div>';
+  checkStamp(quizDay);
+  $('#quizAgain').onclick=()=>startQuiz(quizList,quizDay,quizCtx);
+  $('#quizToSpell').onclick=()=>startSpell(quizList,quizDay,quizCtx);
+  if($('#quizToWrong')) $('#quizToWrong').onclick=()=>go('wrong');
+}
+$('#quizSpeak').onclick=()=>{ const w=quizList[quizIdx]; if(w) playWord(w,false); };
+let quizEyesHide=false;
+function applyEyes(){
+  const el=$('#quizWord'); const b=$('#quizEyes');
+  if(!el) return;
+  if(quizEyesHide){ el.dataset.real=el.textContent; el.textContent='? ? ?'; b.classList.add('on'); b.textContent='👀 단어 보기'; }
+  else { if(el.dataset.real) el.textContent=el.dataset.real; b.classList.remove('on'); b.textContent='👀 단어 가리기'; }
+}
+$('#quizEyes').onclick=()=>{ quizEyesHide=!quizEyesHide; applyEyes(); };
+
+/* ---------- spelling ---------- */
+let spellList=[],spellIdx=0,spellRight=0,spellCtx='day',spellDay='01',spellDone=false;
+function startSpell(words,day,ctx){
+  spellList=shuffle(words); spellIdx=0; spellRight=0; spellCtx=ctx; spellDay=day;
+  $('#spellResult').style.display='none'; $('#spellBody').style.display='';
+  $('#scrTitle').textContent=ctx==='wrong'?'오답 받아쓰기':dayLabel(day)+' 받아쓰기';
+  $('#scrSub').textContent=spellList.length+'문제';
+  renderSpell(); goNoRender('spell');
+}
+function renderSpell(){
+  if(spellIdx>=spellList.length) return endSpell();
+  const w=spellList[spellIdx]; spellDone=false;
+  $('#spellMean').textContent=meanOf(w);
+  $('#spellSub').textContent=(posTag(w)?posTag(w)+' · ':'')+'영어 단어를 써 보세요 ('+w.w.replace(/\s/g,'').length+'글자)';
+  $('#spellHintLine').textContent=w.w.replace(/[a-zA-Z]/g,'_ ').trim();
+  const inp=$('#spellInput'); inp.value=''; inp.className='spell-input'; inp.disabled=false;
+  $('#spellAnswer').innerHTML=''; $('#spellFeedback').textContent=''; $('#spellFeedback').className='feedback';
+  $('#spellNext').style.display='none';
+  $('#spellScore').textContent=spellRight+' / '+spellList.length;
+  $('#spellBar').style.width=Math.round(spellIdx/spellList.length*100)+'%';
+  state.seen[w.w]=1; save();
+  if(state.settings.autoSpeak) playWord(w,state.settings.slow);
+}
+function checkSpell(){
+  if(spellDone) return;
+  const w=spellList[spellIdx]; const inp=$('#spellInput');
+  const val=inp.value.trim().toLowerCase();
+  if(!val){ inp.focus(); toast('영어 단어를 써 보세요 ✏️'); return; }
+  spellDone=true;
+  const ok=val===w.w.toLowerCase();
+  inp.disabled=true;
+  const s=state.spell[spellDay]||{r:0,t:0}; s.t++; if(ok)s.r++; state.spell[spellDay]=s;
+  if(ok){
+    spellRight++; inp.classList.add('good'); clearWrong(w);
+    $('#spellFeedback').textContent='정답! 🎉'; $('#spellFeedback').className='feedback good';
+    $('#spellAnswer').innerHTML='<span class="ok">'+esc(w.w)+'</span>';
+    speak('Perfect',false);
+  }else{
+    inp.classList.add('bad'); addWrong(w,'spell');
+    $('#spellFeedback').textContent='조금 달라요!'; $('#spellFeedback').className='feedback bad';
+    $('#spellAnswer').innerHTML='<em>'+esc(w.w)+'</em>';
+    $('#spellHintLine').textContent=w.w.toUpperCase().split('').join(' ');
+    playWord(w,true);
+  }
+  save();
+  $('#spellScore').textContent=spellRight+' / '+spellList.length;
+  $('#spellNext').style.display='';
+  $('#spellNext').onclick=()=>{ spellIdx++; renderSpell(); };
+  setTimeout(()=>{ if(spellDone && curScreen==='spell' && $('#spellNext').style.display!=='none'){ spellIdx++; renderSpell(); } }, ok?1000:2600);
+}
+$('#spellCheck').onclick=checkSpell;
+$('#spellSkip').onclick=()=>{
+  if(spellDone) return;
+  const w=spellList[spellIdx];
+  $('#spellInput').value='';
+  $('#spellInput').focus();
+  $('#spellHintLine').textContent=w.w.replace(/[a-zA-Z]/g,'_ ').trim();
+  toast('한 번 더 생각해 봐요 🙂');
+};
+$('#spellHintBtn').onclick=()=>{
+  const w=spellList[spellIdx]; if(!w||spellDone) return;
+  $('#spellHintLine').textContent=w.w.split('').map((c,i)=>i===0?c.toUpperCase():(c===' '?' ':'_')).join(' ');
+  const inp=$('#spellInput');
+  if(!inp.value) inp.value=w.w[0];
+  inp.focus();
+};
+$('#spellSpeak').onclick=()=>{ const w=spellList[spellIdx]; if(w) playWord(w,false); };
+$('#spellInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); if(spellDone){ $('#spellNext').click(); } else checkSpell(); } });
+function endSpell(){
+  $('#spellBar').style.width='100%';
+  $('#spellBody').style.display='none';
+  const pct=spellList.length?Math.round(spellRight/spellList.length*100):0;
+  const em=pct>=90?'🏆':pct>=70?'🎉':'💪';
+  const msg=pct>=90?'철자까지 완벽해요!':pct>=70?'잘했어요!':'오답노트로 한 번 더!';
+  $('#spellResult').style.display='';
+  $('#spellResult').innerHTML='<div class="result"><span class="em">'+em+'</span>'+
+    '<div class="score">'+spellRight+'<small> / '+spellList.length+'</small></div>'+
+    '<div class="msg">'+msg+' ('+pct+'%)</div>'+
+    '<div class="btn-row" style="justify-content:center;margin-top:18px">'+
+      '<button class="btn primary" id="spellAgain">한 번 더</button>'+
+      '<button class="btn sky" id="spellToQuiz">퀴즈 하기</button>'+
+      (wrongKeys().length?'<button class="btn coral" id="spellToWrong">오답노트 보기</button>':'')+
+    '</div></div>';
+  checkStamp(spellDay);
+  $('#spellAgain').onclick=()=>startSpell(spellList,spellDay,spellCtx);
+  $('#spellToQuiz').onclick=()=>startQuiz(spellList,spellDay,spellCtx);
+  if($('#spellToWrong')) $('#spellToWrong').onclick=()=>go('wrong');
+}
+
+/* ---------- wrong note ---------- */
+function renderWrong(){
+  const keys=wrongKeys();
+  $('#wrongCount').innerHTML=keys.length+'<small>개 단어</small>';
+  $('#tabWrongCnt').textContent=keys.length;
+  $('#tabWrongCnt').style.display=keys.length?'':'none';
+  const box=$('#wrongList'); box.innerHTML='';
+  if(!keys.length){
+    box.innerHTML='<div class="panel empty"><span class="em">🎈</span>오답노트가 비어 있어요!<br>퀴즈나 받아쓰기에서 틀린 단어가 여기 모여요.</div>';
+    ['wrongCards','wrongQuiz','wrongSpell'].forEach(id=>$('#'+id).disabled=true);
+    return;
+  }
+  ['wrongCards','wrongQuiz','wrongSpell'].forEach(id=>$('#'+id).disabled=false);
+  const srcName={quiz:'퀴즈',spell:'받아쓰기',card:'카드'};
+  keys.sort((a,b)=>(state.wrongs[b].at||0)-(state.wrongs[a].at||0));
+  keys.forEach(k=>{
+    const w=BY_WORD[k], rec=state.wrongs[k];
+    const row=document.createElement('div'); row.className='wrongrow';
+    row.innerHTML='<div style="flex:1;min-width:0"><div class="w">'+esc(w.w)+
+      '<span class="src">'+esc(srcName[rec.src]||'연습')+(rec.n>1?' ×'+rec.n:'')+'</span></div>'+
+      '<div class="m">'+esc(w.pm)+' · DAY '+w.day+'</div></div>'+
+      '<div class="sp"><button class="iconbtn" data-a="say">🔊</button><button class="iconbtn" data-a="del">✔️</button></div>';
+    row.querySelector('[data-a="say"]').onclick=()=>playWord(w,false);
+    row.querySelector('[data-a="del"]').onclick=()=>{ clearWrong(w); renderWrong(); toast('오답노트에서 지웠어요'); };
+    box.appendChild(row);
+  });
+}
+$('#wrongCards').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startCards(ws,'-','wrong'); };
+$('#wrongQuiz').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startQuiz(ws,'-','wrong'); };
+$('#wrongSpell').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startSpell(ws,'-','wrong'); };
+$('#wrongClear').onclick=()=>{ if(!wrongKeys().length) return; if(confirm('오답노트를 모두 비울까요?')){ state.wrongs={}; saveNow(); renderWrong(); toast('오답노트를 비웠어요'); } };
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  $('#swAuto').classList.toggle('on',!!state.settings.autoSpeak);
+  $('#swSlow').classList.toggle('on',!!state.settings.slow);
+  $('#swMp3').classList.toggle('on',!!state.settings.mp3);
+}
+$('#swAuto').onclick=()=>{ state.settings.autoSpeak=!state.settings.autoSpeak; renderSettings(); saveNow(); };
+$('#swSlow').onclick=()=>{ state.settings.slow=!state.settings.slow; renderSettings(); saveNow(); };
+$('#swMp3').onclick=()=>{ state.settings.mp3=!state.settings.mp3; renderSettings(); saveNow(); };
+$('#btnReset').onclick=()=>{
+  if(!confirm('학습 기록을 모두 지울까요? 되돌릴 수 없어요.')) return;
+  state=JSON.parse(JSON.stringify(DEFAULT)); saveNow(); renderSettings(); renderHome(); toast('기록을 지웠어요');
+};
+$('#btnVoiceQuick').onclick=()=>{ state.settings.slow=!state.settings.slow; saveNow(); toast(state.settings.slow?'느리게 재생으로 바꿨어요 🐢':'보통 속도로 바꿨어요 🔊'); };
+
+/* ---------- misc ---------- */
+$('#btnHome').onclick=()=>go('home');
+$('#btnToWrong').onclick=()=>go('wrong');
+$$('.tabbar .tab').forEach(b=>b.onclick=()=>go(b.dataset.scr));
+$$('#dayFilter .chip').forEach(c=>c.onclick=()=>{
+  $$('#dayFilter .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); filter=c.dataset.f; renderHome();
+});
+$$('[data-hw]').forEach(b=>b.onclick=()=>openDay(b.dataset.hw));
+$('#btnResume').onclick=()=>{
+  let target=ALL_DAYS.find(id=>{const s=dayStats(id); return s.seen>0&&s.stars<3;});
+  if(!target) target=ALL_DAYS.find(id=>dayStats(id).seen===0)||'01';
+  openDay(target);
+};
+/* first touch unlocks speech on iOS */
+let unlocked=false;
+document.addEventListener('pointerdown',function once(){
+  if(unlocked) return; unlocked=true;
+  try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; u.lang='en-US'; speechSynthesis.speak(u); }catch(e){}
+  try{ audioEl.src=audioEl.src||''; }catch(e){}
+  document.removeEventListener('pointerdown',once);
+},{passive:true});
+
+renderHome(); renderSettings(); renderWrong();
+window.addEventListener('beforeunload',saveNow);
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') saveNow(); });
+</script>
+</body>
+</html>
