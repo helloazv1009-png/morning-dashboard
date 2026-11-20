@@ -696,6 +696,60 @@
     .greet{white-space:nowrap}
   }
 
+  /* ===== 날씨 카드 한 줄 압축 ===== */
+  .weather .w-top{align-items:center; gap:9px}
+  .weather .w-top > div{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+  .weather .w-temp{font-size:26px; line-height:1}
+  .weather .w-desc{font-size:13.5px}
+  .weather .w-meta{font-size:12.5px; margin-top:1px}
+  .weather .w-tip{font-size:13.5px; margin-top:1px}
+  .weather .w-place{font-size:10.5px; margin-top:1px}
+
+  /* ===== 도장판을 이름 줄에 붙임 ===== */
+  .kid-head{row-gap:4px}
+  .head-right{display:flex; align-items:center; gap:10px; margin-left:auto; min-width:0}
+  .head-right .stampboard{margin:0; padding:3px 6px; gap:4px; border-radius:12px; background:rgba(255,255,255,.5)}
+  body[data-layout="tab"] .head-right .stampboard{padding:3px 6px; gap:5px}
+  .head-right .stamp-slot{width:26px; height:26px}
+  .head-right .stamp-slot .stamp{width:24px; height:24px}
+  body[data-layout="tab"] .head-right .stamp-slot{width:32px; height:32px}
+  body[data-layout="tab"] .head-right .stamp-slot .stamp{width:29px; height:29px}
+  @media (max-width:900px){
+    .head-right{width:100%; justify-content:flex-start; margin-left:0; flex-wrap:wrap}
+    .head-right .kid-timer{margin-left:auto}
+  }
+
+  /* ===== 높이 미세 조정 (한 화면에 10칸) ===== */
+  .hero{padding:8px 16px 9px}
+  .hero-text{font-size:31px}
+  body[data-layout="tab"] .hero-text{font-size:33px}
+  .hero-bar{height:17px; margin-top:6px}
+  .hero-sub{font-size:13px}
+  .infobar{padding:6px 16px 0}
+  .infobar .clock{font-size:31px}
+  .clockbox{padding:5px 13px}
+  .infobar .clock-sub{font-size:13px}
+  .stopwatch{padding:5px 8px}
+  .stopwatch .sw-time{font-size:23px}
+  .sw-btn{min-height:38px; font-size:13.5px}
+  .affirm{padding:5px 14px; font-size:16px; margin-top:5px}
+  .icard{padding:5px 5px 6px}
+  .icard-label{padding:4px 3px 0; font-size:15px}
+  .icard-sub{font-size:10.5px; margin-top:1px}
+  body[data-layout="tab"] .icard-label{font-size:15.5px}
+  body[data-layout="tab"] .icard-sub{font-size:11px}
+  .kid-head{padding:0 2px 5px}
+  body[data-layout="tab"] .igrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+
+  /* 좁은 화면: 시계·스톱워치 한 줄, 날씨 아래 한 줄 */
+  @media (max-width:900px){
+    .infobar{grid-template-columns:1fr auto; grid-template-areas:"clock sw" "weather weather"; gap:8px 10px}
+    .infobar .clockbox{grid-area:clock}
+    .infobar .stopwatch{grid-area:sw}
+    .infobar .weather{grid-area:weather}
+    .infobar .clockbox{align-items:flex-start}
+  }
+
 </style>
 </head>
 <body data-theme="pokemon" data-layout="side">
@@ -1702,7 +1756,7 @@
       box.innerHTML = '<div class="w-top"><span class="w-emoji">🌥️</span><div>' +
         '<div class="w-desc">날씨를 불러오지 못했어요</div></div></div>' +
         '<div class="w-tip">창밖을 보고 옷을 정해요</div>' +
-        '<div class="w-place">수원시 영통구 망포동 · 인터넷 연결을 확인해 주세요</div>';
+        '<div class="w-meta">망포동 · 인터넷 연결을 확인해 주세요</div>';
       return;
     }
     var w = weatherData;
@@ -1718,9 +1772,8 @@
         '<div class="w-temp">' + Math.round(w.temp) + '°</div>' +
         '<div class="w-desc">' + esc(lab[0]) + ' · 체감 ' + Math.round(w.feels) + '°</div>' +
       '</div></div>' +
-      '<div class="w-meta">최고 ' + Math.round(w.tmax) + '° · 최저 ' + Math.round(w.tmin) + '° · 강수 ' + Math.round(w.rain) + '%</div>' +
-      '<div class="w-tip">' + esc(clothingTip(w.feels, w.rain)) + '</div>' +
-      '<div class="w-place">수원시 영통구 망포동' + (when ? ' · ' + when : '') + (stale ? ' (오래된 정보)' : '') + '</div>';
+      '<div class="w-meta">최고 ' + Math.round(w.tmax) + '° · 최저 ' + Math.round(w.tmin) + '° · 강수 ' + Math.round(w.rain) + '% · 망포동' + (when ? ' ' + when : '') + (stale ? ' (오래된 정보)' : '') + '</div>' +
+      '<div class="w-tip">' + esc(clothingTip(w.feels, w.rain)) + '</div>';
   }
 
   function fetchWeather(){
@@ -1901,11 +1954,17 @@
     if(nm >= 12 * 60 && nm < 21 * 60 + 30) return 'h';
     return 'n';
   }
-  /* 시간대가 바뀌는 순간에만 자동으로 섹션을 넘긴다 (그 사이엔 사용자가 고른 탭 유지) */
+  /* 시간대가 바뀌는 순간에만 자동으로 섹션을 넘긴다 (그 사이엔 사용자가 고른 탭 유지).
+     19:00 이 되는 순간에는 숙제 타이머가 한 번 자동으로 켜진다. */
+  var hwWasActive = null;
   function checkAutoSection(){
-    var a = autoSectionFor(simMin());
+    var nm = simMin();
+    var a = autoSectionFor(nm);
+    var hwActive = (nm >= toMin(state.homeworkStart) && nm < toMin(state.homeworkEnd));
+    var changed = false;
     if(lastAuto === null){
       lastAuto = a;
+      hwWasActive = hwActive;
       if(autoFollow) section = a;
       return false;
     }
@@ -1913,9 +1972,15 @@
       lastAuto = a;
       section = a;
       autoFollow = true;
-      return true;
+      changed = true;
     }
-    return false;
+    if(hwWasActive === false && hwActive){
+      section = 'h';
+      autoFollow = true;
+      changed = true;
+    }
+    hwWasActive = hwActive;
+    return changed;
   }
   function setSection(sec){
     if(!sec || 'mhn'.indexOf(sec) < 0) return;
@@ -1995,7 +2060,7 @@
     return { s: s, e: e };
   }
   function fmtSpan(mins){
-    mins = Math.max(0, Math.ceil(mins - 0.5));
+    mins = Math.max(0, Math.ceil(mins));
     var h = Math.floor(mins / 60), m = mins % 60;
     if(h > 0 && m > 0) return h + '시간 ' + m + '분';
     if(h > 0) return h + '시간';
@@ -2221,7 +2286,6 @@
 
     if(section === 'm'){
       body =
-        stampBoardHTML(kidIdx) +
         illustGridHTML(kidIdx, 'routine', today, k.routine) +
         '<div class="panel">' +
           '<h4><span>🎒</span>가방정리 <span class="badge">' + countDone(kidIdx, 'bag', today, k.bag || []) + '/' + (k.bag || []).length + '</span></h4>' +
@@ -2235,7 +2299,6 @@
     }else if(section === 'n'){
       var night = k.night || [];
       body =
-        stampBoardHTML(kidIdx) +
         illustGridHTML(kidIdx, 'night', today, night) +
         '<div class="rnote">오늘 하루도 수고했어요. 푹 자고 내일 또 만나요 🌙</div>' +
         statsStripHTML(kidIdx);
@@ -2258,11 +2321,14 @@
         statsStripHTML(kidIdx);
     }
 
+    var stamp = (section === 'm' || section === 'n') ? stampBoardHTML(kidIdx) : '';
     return '<section class="kid" data-kid="' + kidIdx + '">' +
       '<div class="kid-head">' +
         '<h2 class="kid-name">' + esc(k.name) + '</h2>' +
         '<span class="head-note" id="knote' + kidIdx + '"></span>' +
-        '<span class="kid-timer" data-timer="' + kidIdx + '">-</span>' +
+        '<div class="head-right">' + stamp +
+          '<span class="kid-timer" data-timer="' + kidIdx + '">-</span>' +
+        '</div>' +
       '</div>' +
       body +
       '</section>';
