@@ -1132,7 +1132,7 @@
   /* ===================== 기본값 ===================== */
   function lines(arr){ return arr.join('\n'); }
 
-  var DATA_VERSION = 5; /* 기본값을 바꿀 때마다 올린다 (v2: 학원 시간표 · v3: '리브로'→'리브르' · v4: 얼굴 로션·자기전 준비·웅진 통화·만점왕 3장 · v5: 숙제 타이머 19:00~21:30 · 한 명씩 크게가 기본 · 일러스트 카드) */
+  var DATA_VERSION = 6; /* 기본값을 바꿀 때마다 올린다 (v2: 학원 시간표 · v3: '리브로'→'리브르' · v4: 얼굴 로션·자기전 준비·웅진 통화·만점왕 3장 · v5: 숙제 타이머 19:00~21:30 · 한 명씩 크게가 기본 · 일러스트 카드 · v6: 단희 월·금 웅진 코어리딩북 · 단영 금 받아쓰기 1-10번) */
 
   var DEFAULT_STATE = {
     version: DATA_VERSION,
@@ -1167,11 +1167,11 @@
           '양치질 하기'
         ],
         homework: {
-          '월': ['E-pick 2권','기탄수학 3장','웅진 오늘의 학습','리브르 숙제','어휘 2개 쓰기 (어휘달력)'],
+          '월': ['E-pick 2권','기탄수학 3장','웅진 오늘의 학습','웅진 코어리딩북','리브르 숙제','어휘 2개 쓰기 (어휘달력)'],
           '화': ['클래스카드','웅진 / 오답노트','만점왕 3장','리브르 종이책','역사문제집 Day 2개'],
           '수': ['리브르 숙제','기탄수학 3장','웅진 / 오답노트','과학문제집 1단원'],
           '목': ['E-pick 2권','클래스카드','만점왕 3장','웅진'],
-          '금': ['웅진상담 17:40','리브르 숙제','소리책','기탄 3장'],
+          '금': ['웅진상담 17:40','웅진 코어리딩북','리브르 숙제','소리책','기탄 3장'],
           '토': ['클래스카드','주제글쓰기','책가방·필통·준비물'],
           '일': []
         },
@@ -1221,7 +1221,7 @@
           '화': ['클래스카드 5등↑','웅진 오늘의 학습','만점왕 수학 3장','리브르 종이책','소리책','받아쓰기 2문장','예쁜 말 쓰기 2장'],
           '수': ['리브르 숙제','기탄수학 3장','웅진 / 오답노트','구구단 / 받아쓰기 2문장'],
           '목': ['클래스카드','E-pick 2권','만점왕 수학 3장','웅진 오늘의 학습 / 웅진숙제','받아쓰기 연습','예쁜 말 쓰기 2장'],
-          '금': ['리브르 숙제','웅진','받아쓰기 전부 Test','소리책','기탄수학 3장'],
+          '금': ['리브르 숙제','웅진','받아쓰기 1-10번','소리책','기탄수학 3장'],
           '토': ['클래스카드','받아쓰기','책가방·필통·준비물'],
           '일': []
         },
@@ -1382,7 +1382,9 @@
      테마·이름·출발시간·아침준비·숙제 등 사용자가 고친 값은 그대로 둔다.
      v2 → v3: 숙제 항목의 '리브로' 표기를 '리브르'로 통일한다.
      v3 → v4: 아침 준비에 '얼굴 로션 바르기'를 넣고 자기전 준비 4항목을 신설하며,
-              단영 월 웅진 통화 시간과 만점왕 3장을 반영한다. */
+              단영 월 웅진 통화 시간과 만점왕 3장을 반영한다.
+     v4 → v6: 단희 월·금에 '웅진 코어리딩북'을 더하고,
+              단영 금 '받아쓰기 전부 Test'를 '받아쓰기 1-10번'으로 바꾼다. */
   function migrateData(raw, st){
     var v = parseInt(raw && raw.version, 10);
     if(isNaN(v)) v = 1;
@@ -1510,6 +1512,52 @@
             });
           });
           if(moved) writeJSON(CHECKS_KEY, rawChecks4);
+        }
+      }catch(e){}
+    }
+    if(v < 6){
+      /* v6: 단희 월·금에 '웅진 코어리딩북'을 더하고, 단영 금 받아쓰기를 '받아쓰기 1-10번'으로 바꾼다.
+         이미 들어 있는 항목은 두 번 넣지 않고, 사용자가 지운 항목은 되살리지 않는 선에서만 맞춘다. */
+      var addHwItem = function(kid, day, text, afterWord){
+        if(!kid || !kid.homework || !Array.isArray(kid.homework[day])) return;
+        var list = kid.homework[day];
+        for(var a = 0; a < list.length; a++){ if(String(list[a]).indexOf(text) >= 0) return; }
+        var at = -1;
+        if(afterWord){
+          for(var b = 0; b < list.length; b++){
+            if(String(list[b]).indexOf(afterWord) >= 0){ at = b; break; }
+          }
+        }
+        if(at >= 0) list.splice(at + 1, 0, text);
+        else list.push(text);
+      };
+      var spellRename = function(s){
+        return typeof s === 'string' ? s.replace(/받아쓰기\s*전부\s*Test/g, '받아쓰기 1-10번') : s;
+      };
+      if(st.kids[0]){
+        addHwItem(st.kids[0], '월', '웅진 코어리딩북', '웅진 오늘의 학습');
+        addHwItem(st.kids[0], '금', '웅진 코어리딩북', '웅진상담');
+      }
+      if(st.kids[1] && st.kids[1].homework && Array.isArray(st.kids[1].homework['금'])){
+        st.kids[1].homework['금'] = st.kids[1].homework['금'].map(spellRename);
+      }
+      /* 오늘 체크 표시는 항목 이름을 키로 저장하므로, 이름이 바뀐 받아쓰기 체크도 함께 옮긴다 */
+      try{
+        var rawChecks6 = readJSON(CHECKS_KEY, null);
+        if(rawChecks6 && Array.isArray(rawChecks6.kids)){
+          var ck6 = rawChecks6.kids[1];
+          var hw6 = ck6 && ck6.homework ? ck6.homework['금'] : null;
+          if(hw6 && typeof hw6 === 'object'){
+            var moved6 = false;
+            Object.keys(hw6).forEach(function(key){
+              var nk = spellRename(key);
+              if(nk === key) return;
+              if(!Object.prototype.hasOwnProperty.call(hw6, nk)) hw6[nk] = hw6[key];
+              delete hw6[key];
+              moved6 = true;
+            });
+            if(moved6) writeJSON(CHECKS_KEY, rawChecks6);
+          }
         }
       }catch(e){}
     }
