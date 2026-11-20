@@ -138,6 +138,59 @@
   .affirm .af-ico{font-size:19px}
   .affirm .af-text{flex:1; line-height:1.32}
 
+  /* ===== ⭐ 누적 스티커 보드 ===== */
+  .starboard{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:8px 18px 0}
+  .star-card{
+    display:flex; align-items:center; gap:12px; min-width:0;
+    padding:8px 14px 9px; border-radius:20px;
+    background:linear-gradient(135deg,rgba(255,255,255,.95) 0%,var(--accent-soft) 100%);
+    border:2px solid rgba(255,255,255,.92); box-shadow:0 6px 18px var(--shadow);
+  }
+  .sc-head{display:flex; align-items:center; gap:7px; min-width:0; flex-wrap:wrap}
+  .sc-ico{width:25px; height:25px; flex:0 0 auto; color:var(--accent-2); filter:drop-shadow(0 2px 3px var(--shadow))}
+  .sc-ico svg{width:100%; height:100%; display:block; fill:currentColor}
+  .sc-name{font-size:18px; font-weight:900; letter-spacing:-.5px; white-space:nowrap}
+  .sc-since{
+    font-size:11.5px; font-weight:800; color:var(--ink-2);
+    background:rgba(255,255,255,.72); padding:2px 8px; border-radius:99px; white-space:nowrap;
+  }
+  .sc-cells{margin-left:auto; display:flex; align-items:stretch; gap:8px}
+  .sc-cell{
+    min-width:80px; padding:3px 10px 4px; border-radius:14px; text-align:center;
+    background:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.9);
+  }
+  .sc-cell.total{background:var(--accent); border-color:var(--accent); box-shadow:0 3px 10px var(--shadow)}
+  .sc-cap{display:block; font-size:11px; font-weight:900; color:var(--ink-2); letter-spacing:-.2px; line-height:1.25}
+  .sc-val{display:flex; align-items:baseline; justify-content:center; gap:2px; line-height:1.08}
+  .sc-val b{display:inline-block; font-size:27px; font-weight:900; letter-spacing:-1.2px; font-variant-numeric:tabular-nums}
+  .sc-val i{font-style:normal; font-size:12.5px; font-weight:800; color:var(--ink-2)}
+  .sc-cell.total .sc-cap{color:rgba(255,255,255,.86)}
+  .sc-cell.total .sc-val b, .sc-cell.total .sc-val i{color:#fff}
+  .sc-cell.bump .sc-val b{animation:bumpNum .5s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes bumpNum{0%{transform:scale(1)}42%{transform:scale(1.38)}100%{transform:scale(1)}}
+  @media (max-width:760px){
+    .starboard{grid-template-columns:1fr; margin:6px 12px 0; gap:8px}
+  }
+  @media (max-width:600px){
+    .star-card{padding:7px 11px 8px; border-radius:17px; gap:9px}
+    .sc-ico{width:22px; height:22px}
+    .sc-name{font-size:16.5px}
+    .sc-since{font-size:10.5px; padding:1px 7px}
+    .sc-cell{min-width:68px; padding:2px 8px 3px}
+    .sc-val b{font-size:24px}
+  }
+  /* 설정: 누적 스티커 수동 조정 */
+  .star-edit{display:flex; align-items:center; gap:7px; flex-wrap:wrap}
+  .star-edit .se-cur{font-size:14.5px; font-weight:900; margin-right:2px}
+  .star-edit .se-cur b{font-size:18px; color:var(--accent-2); font-variant-numeric:tabular-nums}
+  .se-btn{
+    min-height:38px; padding:0 13px; border-radius:11px; cursor:pointer;
+    border:1.5px solid var(--line); background:#fff; font-size:14px; font-weight:900;
+    transition:transform .08s ease;
+  }
+  .se-btn:active{transform:scale(.96)}
+  .se-btn.danger{border-color:#F3B4B0; color:#C0392B}
+
   /* ===== 탭(세로) ===== */
   .tab-btn{
     flex:1; min-height:56px; border-radius:18px; border:2px solid transparent;
@@ -881,6 +934,8 @@
   <span class="af-text" id="affirmText">오늘도 너는 사랑받는 아이야.</span>
 </div>
 
+<section class="starboard" id="starBoard" aria-label="누적 스티커"></section>
+
 <main class="kids" id="kids"></main>
 
 <div class="praise-toast" id="praiseToast" role="status" aria-live="polite"></div>
@@ -1022,6 +1077,17 @@
         <label for="setBag0">가방정리 체크 (한 줄에 하나씩)</label>
         <textarea class="area" id="setBag0" data-kid="0" data-field="bag" style="min-height:96px"></textarea>
       </div>
+
+      <div class="field">
+        <span class="field-label">⭐ 누적 스티커</span>
+        <div class="star-edit">
+          <span class="se-cur">오늘 <b id="seToday0">0</b>개 · 누적 총 <b id="seTotal0">0</b>개</span>
+          <button class="se-btn" data-act="star-minus" data-kid="0" aria-label="누적 스티커 하나 빼기">−1</button>
+          <button class="se-btn" data-act="star-plus" data-kid="0" aria-label="누적 스티커 하나 더하기">+1</button>
+          <button class="se-btn danger" data-act="star-reset" data-kid="0">누적 초기화</button>
+        </div>
+        <div class="hint">누르면 바로 저장돼요. '누적 초기화'는 한 번 더 눌러야 지워지고, '기본값으로'를 눌러도 누적 스티커는 남아요.</div>
+      </div>
     </section>
 
     <section class="set-pane" data-pane="1">
@@ -1062,6 +1128,17 @@
         <label for="setBag1">가방정리 체크 (한 줄에 하나씩)</label>
         <textarea class="area" id="setBag1" data-kid="1" data-field="bag" style="min-height:96px"></textarea>
       </div>
+
+      <div class="field">
+        <span class="field-label">⭐ 누적 스티커</span>
+        <div class="star-edit">
+          <span class="se-cur">오늘 <b id="seToday1">0</b>개 · 누적 총 <b id="seTotal1">0</b>개</span>
+          <button class="se-btn" data-act="star-minus" data-kid="1" aria-label="누적 스티커 하나 빼기">−1</button>
+          <button class="se-btn" data-act="star-plus" data-kid="1" aria-label="누적 스티커 하나 더하기">+1</button>
+          <button class="se-btn danger" data-act="star-reset" data-kid="1">누적 초기화</button>
+        </div>
+        <div class="hint">누르면 바로 저장돼요. '누적 초기화'는 한 번 더 눌러야 지워지고, '기본값으로'를 눌러도 누적 스티커는 남아요.</div>
+      </div>
     </section>
 
     <div class="actions">
@@ -1080,6 +1157,7 @@
   var DAYS = ['월','화','수','목','금','토','일'];
   var STORAGE_KEY = 'morningRoutineDashboard.v1';
   var CHECKS_KEY  = 'morningRoutineDashboard.checks.v1';
+  var STICKERS_KEY = 'morningRoutineDashboard.stickers.v1';
   var WEATHER_KEY = 'morningRoutineDashboard.weather.v1';
   var WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=37.245&longitude=127.056'
     + '&current=temperature_2m,apparent_temperature,weather_code,precipitation,relative_humidity_2m'
@@ -1132,7 +1210,7 @@
   /* ===================== 기본값 ===================== */
   function lines(arr){ return arr.join('\n'); }
 
-  var DATA_VERSION = 6; /* 기본값을 바꿀 때마다 올린다 (v2: 학원 시간표 · v3: '리브로'→'리브르' · v4: 얼굴 로션·자기전 준비·웅진 통화·만점왕 3장 · v5: 숙제 타이머 19:00~21:30 · 한 명씩 크게가 기본 · 일러스트 카드 · v6: 단희 월·금 웅진 코어리딩북 · 단영 금 받아쓰기 1-10번) */
+  var DATA_VERSION = 7; /* 기본값을 바꿀 때마다 올린다 (v2: 학원 시간표 · v3: '리브로'→'리브르' · v4: 얼굴 로션·자기전 준비·웅진 통화·만점왕 3장 · v5: 숙제 타이머 19:00~21:30 · 한 명씩 크게가 기본 · 일러스트 카드 · v6: 단희 월·금 웅진 코어리딩북 · 단영 금 받아쓰기 1-10번 · v7: ⭐ 완료할 때마다 누적되는 스티커 보드) */
 
   var DEFAULT_STATE = {
     version: DATA_VERSION,
@@ -1640,6 +1718,127 @@
     var b = bucket(kidIdx, kind, day), n = 0;
     for(var i = 0; i < list.length; i++){ if(b[list[i]]) n++; }
     return n;
+  }
+
+  /* ===================== ⭐ 누적 스티커 =====================
+     하루치 스티커 = 그날 체크된 항목 수.
+     체크 상태에서 계산하므로 같은 항목을 껐다 켜도 늘지 않고(중복 토글 방지),
+     체크를 풀면 정확히 하나 줄어든다. 날짜가 바뀌면 그날 값은 장부(days)에 남고
+     새로운 날은 0부터 시작하며, 총 누적은 localStorage에 계속 쌓인다. */
+  function countAllChecked(kidIdx){
+    var k = checks.kids[kidIdx], n = 0, key;
+    ['routine', 'night', 'bag'].forEach(function(kind){
+      var b = k[kind] || {};
+      for(key in b){ if(Object.prototype.hasOwnProperty.call(b, key) && b[key]) n++; }
+    });
+    DAYS.forEach(function(d){
+      ['homework', 'prep'].forEach(function(kind){
+        var b = (k[kind] && k[kind][d]) || {};
+        for(key in b){ if(Object.prototype.hasOwnProperty.call(b, key) && b[key]) n++; }
+      });
+    });
+    return n;
+  }
+
+  function emptyStickers(){
+    return { version: 1, startDate: todayKey(), kids: [ { days: {}, adjust: 0 }, { days: {}, adjust: 0 } ] };
+  }
+
+  var stickers = (function(){
+    var L = readJSON(STICKERS_KEY, null);
+    if(!L || !Array.isArray(L.kids) || L.kids.length !== 2) return emptyStickers();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(L.startDate || ''))) L.startDate = todayKey();
+    for(var i = 0; i < 2; i++){
+      var s = L.kids[i];
+      if(!s || typeof s !== 'object') s = L.kids[i] = {};
+      if(!s.days || typeof s.days !== 'object') s.days = {};
+      s.adjust = parseInt(s.adjust, 10) || 0;
+    }
+    return L;
+  })();
+  var lastStar = [0, 0];
+
+  function saveStickers(){ writeJSON(STICKERS_KEY, stickers); }
+  function stickerToday(i){
+    var v = parseInt(stickers.kids[i].days[todayKey()], 10);
+    return (isNaN(v) || v < 0) ? 0 : v;
+  }
+  function stickerTotal(i){
+    var s = stickers.kids[i], n = 0;
+    for(var d in s.days){
+      if(!Object.prototype.hasOwnProperty.call(s.days, d)) continue;
+      var v = parseInt(s.days[d], 10);
+      if(!isNaN(v) && v > 0) n += v;
+    }
+    n += (parseInt(s.adjust, 10) || 0);
+    return n < 0 ? 0 : n;
+  }
+  /* 지금 체크 상태를 오늘 장부에 기록 (체크할 때마다 호출) */
+  function syncStickerDay(){
+    var tk = todayKey();
+    for(var i = 0; i < 2; i++) stickers.kids[i].days[tk] = countAllChecked(i);
+    saveStickers();
+  }
+  /* 날짜가 바뀌기 직전, 그날 마지막 체크 상태를 그 날짜로 확정 */
+  function snapshotStickers(dateStr){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(dateStr || ''))) return;
+    for(var i = 0; i < 2; i++) stickers.kids[i].days[dateStr] = countAllChecked(i);
+    saveStickers();
+  }
+  /* 보호된 수동 조정: +1 / -1 */
+  function adjustStickers(i, delta){
+    var s = stickers.kids[i];
+    s.adjust = (parseInt(s.adjust, 10) || 0) + delta;
+    if(stickerTotal(i) < 0) s.adjust -= stickerTotal(i);
+    saveStickers();
+    renderStickers();
+    renderStickerSettings();
+  }
+  /* 오늘 체크를 통째로 비우기 전에, 오늘 모은 스티커를 누적에 옮겨 담아 잃지 않게 한다 */
+  function carryTodayStickers(){
+    var tk = todayKey();
+    for(var i = 0; i < 2; i++){
+      var n = parseInt(stickers.kids[i].days[tk], 10) || 0;
+      if(n > 0) stickers.kids[i].adjust = (parseInt(stickers.kids[i].adjust, 10) || 0) + n;
+    }
+    saveStickers();
+  }
+  function clearStickers(i){
+    stickers.kids[i] = { days: {}, adjust: 0 };
+    saveStickers();
+    renderStickers();
+    renderStickerSettings();
+  }
+
+  function renderStickers(){
+    var box = document.getElementById('starBoard');
+    if(!box) return;
+    var today = [stickerToday(0), stickerToday(1)];
+    var total = [stickerTotal(0), stickerTotal(1)];
+    box.innerHTML = [0, 1].map(function(i){
+      var up = today[i] > (lastStar[i] || 0);
+      return '<div class="star-card" data-kid="' + i + '">' +
+        '<div class="sc-head"><span class="sc-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.4l2.93 5.94 6.55.95-4.74 4.62 1.12 6.53L12 17.36l-5.86 3.08 1.12-6.53L2.52 9.29l6.55-.95z"/></svg></span>' +
+          '<span class="sc-name">' + esc(state.kids[i].name) + '</span>' +
+          '<span class="sc-since">' + esc(stickers.startDate) + '부터</span></div>' +
+        '<div class="sc-cells">' +
+          '<div class="sc-cell' + (up ? ' bump' : '') + '"><span class="sc-cap">오늘</span>' +
+            '<span class="sc-val"><b>' + today[i] + '</b><i>개</i></span></div>' +
+          '<div class="sc-cell total' + (up ? ' bump' : '') + '"><span class="sc-cap">누적 총</span>' +
+            '<span class="sc-val"><b>' + total[i] + '</b><i>개</i></span></div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    lastStar = [today[0], today[1]];
+  }
+
+  function renderStickerSettings(){
+    [0, 1].forEach(function(i){
+      var t = document.getElementById('seToday' + i);
+      if(t) t.textContent = stickerToday(i);
+      var el = document.getElementById('seTotal' + i);
+      if(el) el.textContent = stickerTotal(i);
+    });
   }
 
   /* ===================== 통계/기록 ===================== */
@@ -2497,9 +2696,11 @@
   function toggleCheck(kidIdx, kind, day, text){
     var b = bucket(kidIdx, kind, day);
     var was = !!b[text];
+    var starBefore = [stickerToday(0), stickerToday(1)];
     if(was) delete b[text];
     else b[text] = true;
     saveChecks();
+    syncStickerDay();
     if(!was) stampSound();
 
     if(kind === 'routine' || kind === 'night'){
@@ -2531,6 +2732,9 @@
         }
       }
     }
+    lastStar = starBefore;
+    renderStickers();
+    renderStickerSettings();
     renderHero();
     updateClock();
     return !was;
@@ -2818,6 +3022,7 @@
       fillKidDay(i);
       $('#setTab' + i).textContent = draft.kids[i].name || ('아이 ' + (i + 1));
     });
+    renderStickerSettings();
     syncPanes();
   }
 
@@ -2914,6 +3119,31 @@
     if(e.key === 'Escape' && $('#settingsModal').classList.contains('open')) closeSettings();
   });
 
+  /* ⭐ 누적 스티커 수동 조정 (설정 안) */
+  $('#settingsModal').addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-act]') : null;
+    if(!el) return;
+    var act = el.getAttribute('data-act');
+    if(act !== 'star-minus' && act !== 'star-plus' && act !== 'star-reset') return;
+    var i = parseInt(el.getAttribute('data-kid'), 10) || 0;
+    if(act === 'star-minus'){ adjustStickers(i, -1); return; }
+    if(act === 'star-plus'){ adjustStickers(i, 1); return; }
+    if(el.getAttribute('data-armed') === '1'){
+      clearStickers(i);
+      el.textContent = '누적 초기화';
+      el.setAttribute('data-armed', '0');
+    }else{
+      el.setAttribute('data-armed', '1');
+      el.textContent = '한 번 더 누르면 지워져요';
+      setTimeout(function(){
+        if(el.getAttribute('data-armed') === '1'){
+          el.setAttribute('data-armed', '0');
+          el.textContent = '누적 초기화';
+        }
+      }, 4000);
+    }
+  });
+
   function saveSettings(){
     if(!draft) return;
     flushTextareas();
@@ -2949,6 +3179,7 @@
     updateClock();
     renderStats();
     renderHero();
+    renderStickers();
     if(state.wakeLock) requestWakeLock();
   }
   $('#saveSettings').addEventListener('click', saveSettings);
@@ -2960,7 +3191,9 @@
       state = clone(DEFAULT_STATE);
       state.previewTime = null;
       try{ window.sessionStorage.removeItem(PREVIEW_KEY); }catch(e){}
+      carryTodayStickers();
       checks = emptyChecks();
+      syncStickerDay();
       lastDone = [0, 0];
       lastNight = [0, 0];
       saveState();
@@ -2976,6 +3209,7 @@
       renderStats();
       updateClock();
       renderHero();
+      renderStickers();
     }else{
       btn.setAttribute('data-armed', '1');
       btn.textContent = '한 번 더 누르면 초기화';
@@ -2991,14 +3225,18 @@
   function checkDayRollover(){
     var tk = todayKey();
     if(checks.date === tk) return false;
+    snapshotStickers(checks.date);   /* 어제까지 모은 스티커를 그 날짜로 확정 */
     checks = emptyChecks();
     saveChecks();
+    syncStickerDay();                /* 새 날의 '오늘'은 0부터, 누적 총은 그대로 */
     viewDay = dayKo();
     justSlot = null;
     lastDone = [0, 0];
     lastNight = [0, 0];
     renderAffirmation();
     renderKids();
+    renderStickers();
+    renderStickerSettings();
     updateClock();
     renderStats();
     return true;
@@ -3019,6 +3257,8 @@
     updateClock();
     renderHero();
     renderStats();
+    syncStickerDay();
+    renderStickers();
     lastDone = [routineInfo(0).done, routineInfo(1).done];
     lastNight = [nightInfo(0).done, nightInfo(1).done];
     renderStopwatch();
@@ -3047,6 +3287,14 @@
   window.__dash = {
     get state(){ return state; },
     get checks(){ return checks; },
+    get stickers(){ return stickers; },
+    stickerToday: stickerToday,
+    stickerTotal: stickerTotal,
+    syncStickerDay: syncStickerDay,
+    renderStickers: renderStickers,
+    clearStickers: clearStickers,
+    adjustStickers: adjustStickers,
+    checkDayRollover: checkDayRollover,
     get viewDay(){ return viewDay; },
     get section(){ return section; },
     setSection: setSection,
