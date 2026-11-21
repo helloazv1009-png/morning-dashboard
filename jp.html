@@ -123,7 +123,9 @@ input{font-family:inherit}
 .face .meaning{font-size:clamp(22px,3.4vw,32px);font-weight:900;line-height:1.3;word-break:keep-all}
 .face .romaji{margin-top:8px;font-size:15px;color:#8E86A0;font-weight:700;letter-spacing:.3px}
 .face .romajikr{margin-top:4px;font-size:14.5px;color:#C2768F;font-weight:800;letter-spacing:.2px}
+.face .romajikr::before{content:'한글 발음 · ';font-size:11px;color:#B49AA9;font-weight:700;letter-spacing:0}
 .wordpill .kr{font-size:12px;color:#7C6E8C;margin-top:2px}
+.wordpill .kr::before{content:'한글 ';color:#B49AA9;font-size:10.5px;font-weight:700}
 .austat{position:fixed;left:50%;top:72px;transform:translateX(-50%) translateY(-8px);background:rgba(57,52,79,.94);color:#fff;padding:8px 15px;border-radius:999px;font-size:12.5px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;z-index:99;max-width:88vw;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .austat.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .face .ex{margin-top:14px;font-size:17px;line-height:1.45;color:#4A4460;font-weight:600}
@@ -882,7 +884,7 @@ function openDay(id){
     b.className='wordpill'+(state.known[w.uid]?' known':'')+(state.unclear[w.uid]?' unclear':'');
     b.innerHTML='<div><div class="w">'+esc(w.k)+'</div>'+
       '<div class="rd">'+esc(w.r)+'</div>'+
-      (w.kr?'<div class="kr">🗣 '+esc(w.kr)+'</div>':'')+
+      (w.kr?'<div class="kr">'+esc(w.kr)+'</div>':'')+
       '<div class="m">'+esc(w.m)+'</div></div><div class="sp">🔊</div>';
     b.onclick=()=>say(w,state.settings.slow);
     list.appendChild(b);
@@ -917,7 +919,7 @@ function showCard(){
   $('#cardMean').textContent=w.m;
   $('#cardRomaji').textContent=w.ro;
   const krEl=$('#cardKr');
-  if(w.kr){ krEl.style.display=''; krEl.textContent='🗣 '+w.kr; } else { krEl.style.display='none'; krEl.textContent=''; }
+  if(w.kr){ krEl.style.display=''; krEl.textContent=w.kr; } else { krEl.style.display='none'; krEl.textContent=''; }
   preload(w.a); if(cardList[cardIdx+1]) preload(cardList[cardIdx+1].a);
   $('#cardEx').textContent=w.ex||'';
   $('#cardExR').textContent=w.exr? (furiOn()?w.exr:'') : '';
