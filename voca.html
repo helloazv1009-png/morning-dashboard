@@ -163,6 +163,48 @@ input{font-family:inherit}
 .answerbig em{color:var(--bad);font-style:normal;text-decoration:underline}
 .answerbig.ok em{color:var(--good)}
 
+/* match game */
+.match-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hudbox{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:8px 14px;text-align:center;min-width:88px}
+.hudbox .k{font-size:11.5px;color:var(--ink2);font-weight:800}
+.hudbox .v{font-size:20px;font-weight:900;letter-spacing:-.5px;line-height:1.25;font-variant-numeric:tabular-nums}
+.hudbox .v small{font-size:11.5px;font-weight:700;color:var(--ink2);margin-left:2px}
+.hudbox.best{background:linear-gradient(180deg,#FFFBE8,#FFF2C6);border:2px solid #FFE88A}
+.match-top .spacer{flex:1;min-width:0}
+.match-top .mini{font-size:13px;padding:11px 14px;min-height:0}
+.match-roundline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 4px 10px;font-size:13.5px;color:var(--ink2);font-weight:700}
+.match-roundline .pill{font-size:12px;padding:4px 10px}
+.match-board{--cols:4;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:clamp(7px,.9vw,13px);height:min(58vh,520px);-webkit-user-select:none;user-select:none}
+.mcard{position:relative;border-radius:18px;background:#fff;box-shadow:var(--shadow);padding:12px 14px;display:flex;align-items:center;justify-content:center;text-align:center;min-height:0;overflow:hidden;transition:background .18s,box-shadow .18s,transform .1s,opacity .25s}
+.mcard:active{transform:translateY(2px)}
+.mcard .t{font-weight:900;line-height:1.16;word-break:break-word;letter-spacing:-.3px;max-width:100%}
+.mcard.en .t{font-size:clamp(18px,2.1vw,32px)}
+.mcard.ko{background:linear-gradient(180deg,#FFFBE9,#FFF2C8)}
+.mcard.ko .t{font-size:clamp(15px,1.75vw,24px);font-weight:800;color:#5A4820}
+.mcard .tag{position:absolute;top:7px;left:10px;font-size:10px;font-weight:900;color:#A08F6C;letter-spacing:.6px}
+.mcard .spk{position:absolute;bottom:6px;right:6px;width:32px;height:32px;border-radius:11px;background:#F7F1E1;display:flex;align-items:center;justify-content:center;font-size:15px}
+.mcard.sel{background:linear-gradient(180deg,#FFE066,#FFD84D);box-shadow:0 0 0 4px #FFF3C4,var(--shadow);transform:translateY(-2px)}
+.mcard.sel .tag{color:#8A6A00}
+.mcard.ok{background:linear-gradient(180deg,#CFF3DE,#A9E4C3);box-shadow:0 0 0 4px #8BD6AC;animation:mpop .42s ease}
+.mcard.ok .t{color:#1E6A46}
+.mcard.bad{background:#FFE1DC;box-shadow:0 0 0 4px #F3B3AC;animation:mshake .42s ease}
+.mcard.done{background:#EFFAF3;box-shadow:inset 0 0 0 2px #CBEBD5;opacity:.6;pointer-events:none}
+.mcard.done .t{color:#7FAE8F}
+.mcard.done .tag,.mcard.done .spk{opacity:.35}
+@keyframes mshake{0%,100%{transform:translateX(0)}15%{transform:translateX(-7px) rotate(-1.2deg)}35%{transform:translateX(7px) rotate(1.2deg)}55%{transform:translateX(-5px)}75%{transform:translateX(4px)}}
+@keyframes mpop{0%{transform:scale(1)}40%{transform:scale(1.07)}70%{transform:scale(.98)}100%{transform:scale(1)}}
+.match-resultcard{max-width:580px;margin:0 auto;text-align:center;padding:22px 18px}
+#matchResult{max-width:660px;margin-left:auto;margin-right:auto}
+.match-resultcard .em{font-size:62px;display:block;line-height:1.05}
+.match-resultcard .h{font-size:25px;font-weight:900;margin-top:4px;letter-spacing:-.6px}
+.match-resultcard .sub{font-size:14.5px;color:var(--ink2);margin-top:6px;line-height:1.5}
+.match-stats{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.match-stats .s{background:#FFFDF7;border-radius:14px;padding:10px 16px;box-shadow:var(--shadow);min-width:96px}
+.match-stats .s b{display:block;font-size:22px;font-weight:900;letter-spacing:-.5px}
+.match-stats .s span{font-size:11.5px;color:var(--ink2);font-weight:700}
+.match-stats .s.hi{background:linear-gradient(180deg,#FFFBE8,#FFEFB8)}
+@media (max-width:560px){.hudbox{padding:7px 10px;min-width:72px}.hudbox .v{font-size:17px}.match-top{gap:7px}}
+
 /* wrong note */
 .wrongrow{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:10px}
 .wrongrow .w{font-size:19px;font-weight:800}
@@ -265,6 +307,7 @@ input{font-family:inherit}
         <button class="btn primary" id="dayBtnCards">🃏 카드로 공부</button>
         <button class="btn sky" id="dayBtnQuiz">📝 뜻 고르기 퀴즈</button>
         <button class="btn mint" id="dayBtnSpell">✏️ 스펠링 받아쓰기</button>
+        <button class="btn lilac" id="dayBtnMatch">🧩 카드 맞추기</button>
       </div>
     </div>
     <div class="h-sec"><h2>단어 목록</h2><span class="muted">단어를 누르면 발음이 나와요</span></div>
@@ -370,6 +413,26 @@ input{font-family:inherit}
     <div class="panel" id="spellResult" style="display:none"></div>
   </section>
 
+  <!-- MATCH GAME -->
+  <section class="screen" id="scr-match">
+    <div class="match-top" id="matchTop">
+      <div class="hudbox"><div class="k">걸린 시간</div><div class="v" id="matchTime">0:00</div></div>
+      <div class="hudbox"><div class="k">남은 쌍</div><div class="v" id="matchLeft">0</div></div>
+      <div class="hudbox"><div class="k">시도</div><div class="v" id="matchTries">0</div></div>
+      <div class="hudbox best"><div class="k" id="matchBestKap">최고 기록</div><div class="v" id="matchBest">-</div></div>
+      <div class="spacer"></div>
+      <button class="chip" id="matchSound">🔊 발음 ON</button>
+      <button class="btn ghost mini" id="matchExit">← 나가기</button>
+    </div>
+    <div class="match-roundline">
+      <span id="matchRoundLine">DAY 01 · 1 / 1 라운드</span>
+      <span class="pill" id="matchPairPill">6쌍</span>
+      <span style="font-weight:600">영어 카드와 뜻 카드를 차례로 눌러 짝을 맞춰 보세요</span>
+    </div>
+    <div class="match-board" id="matchBoard"></div>
+    <div class="panel" id="matchResult" style="display:none"></div>
+  </section>
+
   <!-- WRONG NOTE -->
   <section class="screen" id="scr-wrong">
     <div class="panel">
@@ -382,6 +445,7 @@ input{font-family:inherit}
           <button class="btn primary" id="wrongCards">🃏 카드로 복습</button>
           <button class="btn sky" id="wrongQuiz">📝 퀴즈</button>
           <button class="btn mint" id="wrongSpell">✏️ 받아쓰기</button>
+          <button class="btn lilac" id="wrongMatch">🧩 카드 맞추기</button>
         </div>
       </div>
     </div>
@@ -461,13 +525,13 @@ const ALL_DAYS = DAYS.map(d=>d.id).concat(REVIEW_DAYS).sort();
 
 /* ---------- state ---------- */
 const KEY='danny_voca_v1';
-const DEFAULT={known:{},unclear:{},wrongs:{},seen:{},quiz:{},spell:{},settings:{autoSpeak:true,slow:false,mp3:true}};
+const DEFAULT={known:{},unclear:{},wrongs:{},seen:{},quiz:{},spell:{},matchBest:{},settings:{autoSpeak:true,slow:false,mp3:true}};
 let state = load();
 function load(){
   try{ const raw=localStorage.getItem(KEY); if(!raw) return JSON.parse(JSON.stringify(DEFAULT));
     const s=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(raw));
     s.settings=Object.assign({autoSpeak:true,slow:false,mp3:true},s.settings||{});
-    ['known','unclear','wrongs','seen','quiz','spell'].forEach(k=>s[k]=s[k]||{});
+    ['known','unclear','wrongs','seen','quiz','spell','matchBest'].forEach(k=>s[k]=s[k]||{});
     return s;
   }catch(e){ return JSON.parse(JSON.stringify(DEFAULT)); }
 }
@@ -518,7 +582,7 @@ function playWord(w,slow){
 }
 
 /* ---------- navigation ---------- */
-const SCREENS=['home','day','cards','quiz','spell','wrong','settings'];
+const SCREENS=['home','day','cards','quiz','spell','match','wrong','settings'];
 const TITLES={home:['단영의 능률보카','능률VOCA 초등 기본 · 400단어'],wrong:['오답노트','틀린 단어만 모아서 복습'],settings:['설정','발음·학습 기록']};
 let curScreen='home';
 function go(scr){
@@ -528,6 +592,7 @@ function go(scr){
   if(t){ $('#scrTitle').textContent=t[0]; $('#scrSub').textContent=t[1]; }
   $$('.tabbar .tab').forEach(b=>b.classList.toggle('on',b.dataset.scr===scr));
   window.scrollTo(0,0);
+  if(scr!=='match') stopMatchTimer();
   if(scr==='home') renderHome();
   if(scr==='wrong') renderWrong();
   if(scr==='settings') renderSettings();
@@ -619,6 +684,7 @@ function openDay(id){
 $('#dayBtnCards').onclick=()=>startCards(dayWords(curDay),curDay,'day');
 $('#dayBtnQuiz').onclick=()=>startQuiz(dayWords(curDay),curDay,'day');
 $('#dayBtnSpell').onclick=()=>startSpell(dayWords(curDay),curDay,'day');
+$('#dayBtnMatch').onclick=()=>startMatch(dayWords(curDay),curDay,'day');
 
 /* ---------- flashcards ---------- */
 let cardList=[],cardIdx=0,cardCtx='day',cardDay='01';
@@ -894,6 +960,208 @@ function endSpell(){
   if($('#spellToWrong')) $('#spellToWrong').onclick=()=>go('wrong');
 }
 
+/* ---------- match game ---------- */
+const MATCH_PAIRS=6;
+let matchCtx='day',matchDay='01',matchRounds=[],matchRoundIdx=0;
+let matchBoard=[],matchSel=null,matchLock=false,matchLeft=0,matchTries=0;
+let matchStart=0,matchTimerH=null,matchMiss={},matchSoundOn=true;
+
+function fmtTime(sec){
+  sec=Math.max(0,Math.round(sec));
+  return Math.floor(sec/60)+':'+pad(sec%60);
+}
+function matchBestKey(pairs){ return matchDay+':'+pairs; }
+function bestOf(key){ const b=state.matchBest&&state.matchBest[key]; return (typeof b==='number'&&b>0)?b:0; }
+
+function splitMatchRounds(words){
+  const list=shuffle(words||[]), n=list.length;
+  if(!n) return [];
+  const rounds=Math.max(1,Math.ceil(n/MATCH_PAIRS));
+  const base=Math.floor(n/rounds), rem=n%rounds, out=[];
+  let at=0;
+  for(let r=0;r<rounds;r++){
+    const size=base+(r<rem?1:0);
+    out.push(list.slice(at,at+size)); at+=size;
+  }
+  return out;
+}
+function startMatch(words,day,ctx){
+  const list=(words||[]).slice();
+  if(!list.length){ toast('맞출 단어가 없어요 🙂'); return; }
+  matchCtx=ctx; matchDay=day; matchRounds=splitMatchRounds(list); matchRoundIdx=0;
+  matchSoundOn=!!state.settings.autoSpeak;
+  $('#scrTitle').textContent=ctx==='wrong'?'오답 카드 맞추기':dayLabel(day)+' 카드 맞추기';
+  $('#scrSub').textContent=list.length+'단어 · '+matchRounds.length+'라운드';
+  $('#matchResult').style.display='none';
+  startMatchRound(0);
+  goNoRender('match');
+}
+function startMatchRound(i){
+  matchRoundIdx=i;
+  const pairs=matchRounds[i]||[];
+  const cards=[];
+  pairs.forEach((w,pi)=>{ cards.push({k:'en',w:w,pid:pi}); cards.push({k:'ko',w:w,pid:pi}); });
+  matchBoard=shuffle(cards);
+  matchSel=null; matchLock=false; matchLeft=pairs.length; matchTries=0; matchMiss={}; matchStart=0;
+  stopMatchTimer();
+  $('#matchTime').textContent='0:00';
+  $('#matchLeft').textContent=matchLeft;
+  $('#matchTries').textContent='0';
+  $('#matchSound').textContent=matchSoundOn?'🔊 발음 ON':'🔇 발음 OFF';
+  $('#matchSound').classList.toggle('on',matchSoundOn);
+  $('#matchRoundLine').textContent=(matchCtx==='wrong'?'오답노트 · ':(dayLabel(matchDay)+' · '))+(i+1)+' / '+matchRounds.length+' 라운드';
+  $('#matchPairPill').textContent=pairs.length+'쌍';
+  const best=bestOf(matchBestKey(pairs.length));
+  $('#matchBestKap').textContent='최고 기록 · '+pairs.length+'쌍';
+  $('#matchBest').innerHTML=best?fmtTime(best):'-';
+  $('#matchResult').style.display='none';
+  const board=$('#matchBoard'); board.style.display='';
+  renderMatchBoard();
+  layoutMatchBoard(cards.length);
+  window.scrollTo(0,0);
+}
+function layoutMatchBoard(n){
+  const box=$('#matchBoard'); if(!box) return;
+  const land=window.innerWidth>=window.innerHeight;
+  let cols;
+  if(n<=4) cols=2;
+  else if(n<=8) cols=land?4:2;
+  else if(n<=12) cols=land?4:3;
+  else cols=land?5:4;
+  const rows=Math.ceil(n/Math.max(1,cols));
+  box.style.setProperty('--cols',cols);
+  const avail=(window.innerHeight||900)-330;
+  const rowH=rows<=2?215:172;
+  const h=Math.max(230,Math.min(avail,rows*rowH));
+  box.style.height=h+'px';
+}
+function renderMatchBoard(){
+  const box=$('#matchBoard'); box.innerHTML='';
+  matchBoard.forEach((c,idx)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='mcard '+(c.k==='en'?'en':'ko');
+    b.dataset.idx=String(idx);
+    b.dataset.kind=c.k;
+    b.setAttribute('aria-label',(c.k==='en'?'영어 카드 ':'뜻 카드 ')+(c.k==='en'?c.w.w:meanOf(c.w)));
+    b.innerHTML='<span class="tag">'+(c.k==='en'?'EN':'뜻')+'</span>'+
+      '<span class="t">'+esc(c.k==='en'?c.w.w:meanOf(c.w))+'</span>'+
+      (c.k==='en'?'<span class="spk" data-spk="1">🔊</span>':'');
+    b.onclick=(ev)=>{
+      if(ev.target && ev.target.closest && ev.target.closest('.spk')){ playWord(c.w,state.settings.slow); return; }
+      tapMatchCard(idx);
+    };
+    box.appendChild(b);
+  });
+}
+function startMatchTimer(){
+  if(matchTimerH) return;
+  if(!matchStart) matchStart=Date.now();
+  matchTimerH=setInterval(()=>{
+    if(curScreen!=='match') return;
+    $('#matchTime').textContent=fmtTime((Date.now()-matchStart)/1000);
+  },200);
+}
+function stopMatchTimer(){ if(matchTimerH){ clearInterval(matchTimerH); matchTimerH=null; } }
+function matchEl(idx){ return $('#matchBoard [data-idx="'+idx+'"]'); }
+function registerMatchMiss(w){
+  if(!w) return;
+  matchMiss[w.w]=(matchMiss[w.w]||0)+1;
+  if(matchMiss[w.w]>=2) addWrong(w,'match');
+}
+function tapMatchCard(idx){
+  if(matchLock) return;
+  const c=matchBoard[idx]; if(!c) return;
+  const el=matchEl(idx); if(!el||el.classList.contains('done')) return;
+  startMatchTimer();
+  if(matchSel && matchSel.idx===idx){ matchSel=null; el.classList.remove('sel'); return; }
+  if(matchSel && matchSel.card.k===c.k){
+    const old=matchEl(matchSel.idx); if(old) old.classList.remove('sel');
+    matchSel={idx:idx,card:c}; el.classList.add('sel');
+    if(c.k==='en'&&matchSoundOn) playWord(c.w,state.settings.slow);
+    return;
+  }
+  if(!matchSel){
+    matchSel={idx:idx,card:c}; el.classList.add('sel');
+    if(c.k==='en'&&matchSoundOn) playWord(c.w,state.settings.slow);
+    return;
+  }
+  const first=matchSel.card, firstEl=matchEl(matchSel.idx);
+  matchSel=null; matchTries++; $('#matchTries').textContent=matchTries;
+  if(first.pid===c.pid){
+    if(firstEl){ firstEl.classList.remove('sel'); firstEl.classList.add('ok'); }
+    el.classList.add('ok');
+    const w=c.w;
+    state.seen[w.w]=1; if(state.wrongs[w.w]) clearWrong(w); save();
+    if(matchSoundOn) playWord(w,false);
+    matchLeft--; $('#matchLeft').textContent=matchLeft;
+    setTimeout(()=>{
+      [firstEl,el].forEach(x=>{ if(!x) return; x.classList.remove('ok'); x.classList.add('done'); });
+    },520);
+    if(matchLeft<=0){ matchLock=true; setTimeout(()=>endMatchRound(),780); }
+  }else{
+    matchLock=true;
+    if(firstEl){ firstEl.classList.remove('sel'); firstEl.classList.add('bad'); }
+    el.classList.add('bad');
+    registerMatchMiss(first.w); registerMatchMiss(c.w);
+    if(matchSoundOn) playWord(c.k==='en'?c.w:first.w,state.settings.slow);
+    setTimeout(()=>{
+      [firstEl,el].forEach(x=>{ if(!x) return; x.classList.remove('bad','sel'); });
+      matchLock=false;
+    },640);
+  }
+}
+function endMatchRound(){
+  stopMatchTimer();
+  const elapsed=matchStart?(Date.now()-matchStart)/1000:0;
+  const timeStr=fmtTime(elapsed);
+  const pairs=(matchRounds[matchRoundIdx]||[]).length;
+  const key=matchBestKey(pairs);
+  const prev=bestOf(key);
+  const isBest=!prev||elapsed<prev;
+  if(isBest){ state.matchBest=state.matchBest||{}; state.matchBest[key]=Math.round(elapsed*10)/10; saveNow(); }
+  const best=bestOf(key);
+  $('#matchBest').innerHTML=best?fmtTime(best):'-';
+  const last=matchRoundIdx>=matchRounds.length-1;
+  const hasWrong=wrongKeys().length>0;
+  matchLock=true;
+  const board=$('#matchBoard'); board.style.display='none';
+  const res=$('#matchResult'); res.style.display='';
+  res.innerHTML='<div class="match-resultcard">'+
+    '<span class="em">'+(last?'🏆':'🎉')+'</span>'+
+    '<div class="h">'+(last?'카드 맞추기 완성!':'라운드 클리어!')+'</div>'+
+    '<div class="sub">'+(matchCtx==='wrong'?'오답노트 ':(dayLabel(matchDay)+' '))+(matchRoundIdx+1)+'라운드 · '+pairs+'쌍을 모두 맞췄어요'+
+      (isBest?'<br><b style="color:#C68A00">✨ 최고 기록 갱신!</b>':'')+'</div>'+
+    '<div class="match-stats">'+
+      '<div class="s'+(isBest?' hi':'')+'"><b>'+timeStr+'</b><span>걸린 시간</span></div>'+
+      '<div class="s"><b>'+matchTries+'</b><span>시도</span></div>'+
+      '<div class="s"><b>'+(best?fmtTime(best):'-')+'</b><span>최고 기록</span></div>'+
+    '</div>'+
+    '<div class="btn-row" style="justify-content:center;margin-top:18px">'+
+      '<button class="btn primary" id="matchAgain">🔄 다시 하기</button>'+
+      (!last?'<button class="btn lilac" id="matchNextRound">다음 라운드 →</button>':'<button class="btn lilac" id="matchWholeDay">🔁 처음부터</button>')+
+      (hasWrong?'<button class="btn coral" id="matchToWrong">🤔 오답노트</button>':'')+
+      '<button class="btn ghost" id="matchLeave">'+(last?'DAY로 돌아가기':'그만하기')+'</button>'+
+    '</div></div>';
+  $('#matchAgain').onclick=()=>startMatchRound(matchRoundIdx);
+  if($('#matchNextRound')) $('#matchNextRound').onclick=()=>startMatchRound(matchRoundIdx+1);
+  if($('#matchWholeDay')) $('#matchWholeDay').onclick=()=>startMatchRound(0);
+  if($('#matchToWrong')) $('#matchToWrong').onclick=()=>go('wrong');
+  $('#matchLeave').onclick=()=>exitMatch();
+}
+function exitMatch(){
+  stopMatchTimer(); matchLock=false;
+  if(matchCtx==='wrong') go('wrong'); else openDay(matchDay);
+}
+$('#matchSound').onclick=()=>{
+  matchSoundOn=!matchSoundOn;
+  $('#matchSound').textContent=matchSoundOn?'🔊 발음 ON':'🔇 발음 OFF';
+  $('#matchSound').classList.toggle('on',matchSoundOn);
+};
+$('#matchExit').onclick=exitMatch;
+window.addEventListener('resize',()=>{ if(curScreen==='match'&&matchBoard.length) layoutMatchBoard(matchBoard.length); });
+window.addEventListener('orientationchange',()=>{ setTimeout(()=>{ if(curScreen==='match'&&matchBoard.length) layoutMatchBoard(matchBoard.length); },250); });
+
 /* ---------- wrong note ---------- */
 function renderWrong(){
   const keys=wrongKeys();
@@ -903,11 +1171,11 @@ function renderWrong(){
   const box=$('#wrongList'); box.innerHTML='';
   if(!keys.length){
     box.innerHTML='<div class="panel empty"><span class="em">🎈</span>오답노트가 비어 있어요!<br>퀴즈나 받아쓰기에서 틀린 단어가 여기 모여요.</div>';
-    ['wrongCards','wrongQuiz','wrongSpell'].forEach(id=>$('#'+id).disabled=true);
+    ['wrongCards','wrongQuiz','wrongSpell','wrongMatch'].forEach(id=>$('#'+id).disabled=true);
     return;
   }
-  ['wrongCards','wrongQuiz','wrongSpell'].forEach(id=>$('#'+id).disabled=false);
-  const srcName={quiz:'퀴즈',spell:'받아쓰기',card:'카드'};
+  ['wrongCards','wrongQuiz','wrongSpell','wrongMatch'].forEach(id=>$('#'+id).disabled=false);
+  const srcName={quiz:'퀴즈',spell:'받아쓰기',card:'카드',match:'카드 맞추기'};
   keys.sort((a,b)=>(state.wrongs[b].at||0)-(state.wrongs[a].at||0));
   keys.forEach(k=>{
     const w=BY_WORD[k], rec=state.wrongs[k];
@@ -924,6 +1192,7 @@ function renderWrong(){
 $('#wrongCards').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startCards(ws,'-','wrong'); };
 $('#wrongQuiz').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startQuiz(ws,'-','wrong'); };
 $('#wrongSpell').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startSpell(ws,'-','wrong'); };
+$('#wrongMatch').onclick=()=>{ const ws=wrongKeys().map(k=>BY_WORD[k]); if(ws.length) startMatch(ws,'-','wrong'); };
 $('#wrongClear').onclick=()=>{ if(!wrongKeys().length) return; if(confirm('오답노트를 모두 비울까요?')){ state.wrongs={}; saveNow(); renderWrong(); toast('오답노트를 비웠어요'); } };
 
 /* ---------- settings ---------- */
